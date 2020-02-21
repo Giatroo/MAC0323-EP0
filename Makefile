@@ -1,8 +1,10 @@
+CXX = g++
+
 all : main
 	@echo "Compilado corretamente"
 
-main: Priority_Queue.h
-	g++ main.cpp -o main
+main : main.cpp Priority_Queue.h Plane.h
+	g++ $^ -o $@
 
 clean: 
 	rm main

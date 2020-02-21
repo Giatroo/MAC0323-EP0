@@ -1,6 +1,8 @@
 /* Arquivo com toda a implementação de uma Fila de Prioridades */
 
-#pragma once
+#ifndef _PRIORITY_QUEUE_H_
+#define _PRIORITY_QUEUE_H_
+
 #include <algorithm>
 #include <iostream>
 
@@ -65,7 +67,7 @@ void Priority_Queue<T>::upheap(int i) {
         return;
     }
 
-    int v = item[i];
+    T v = item[i];
     while (i != 1 && item[i/2] <= v) {
         item[i] = item[i/2];
         i = i/2;
@@ -80,7 +82,7 @@ void Priority_Queue<T>::downheap(int i) {
         return;
     }
 
-    int v = item[i];
+    T v = item[i];
     while (2*i <= numItems) {
         int max = 2*i;
         if (max < numItems && item[max] < item[max+1]) max++;
@@ -132,3 +134,5 @@ void Priority_Queue<T>::debug() {
         std::cout << item[i] << ((i != numItems) ? ", " : "");
     std::cout << " ]\n";
 }
+
+#endif

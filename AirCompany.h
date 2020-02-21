@@ -1,0 +1,1 @@
+/* Arquivo dedicado à classe de companias de avião */

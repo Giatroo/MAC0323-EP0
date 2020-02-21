@@ -1,6 +1,8 @@
 /* Arquivo para a classe de um avião. */
 
-#pragma once
+#ifndef _PLANE_H_
+#define _PLANE_H_
+
 #include <iostream>
 using namespace std;
 
@@ -19,8 +21,11 @@ private:
     // Variável que indica se o avião está voando ou se está esperando para decolar
     bool flying; 
 public:
-    // Construtor
-    Plane(string name, int flyTime, bool VIP, bool flying, int fuel = 0);
+    // Construtor padrão
+    Plane();
+
+    // Construtor 
+    Plane(string name, int flyTime, bool VIP, bool flying, int fuel);
 
     void setName(string name);
 
@@ -32,8 +37,20 @@ public:
 
     // Overload no operador < para determinar se um avião tem mais ou menos prioridade que outro
     // Ao fazer p1 < p2, retorna true se p1.priority < p2.priority e false caso contrário
-    Plane operator < (Plane &p);
+    bool operator < (Plane &p);
+    bool operator <= (Plane &p);
+    bool operator > (Plane &p);
+    bool operator >= (Plane &p);
+
+    // ostream& operator << (ostream &os);
+    friend ostream& operator << (ostream &os, Plane &p);
 };
+
+Plane::Plane() {
+    fuel = flyTime = timeWaiting = planeNumber = priority = 0;
+    company = destiny = "";
+    flying = VIP = false;
+}
 
 // O parametro name deve ser do padrão AA00AAA onde A indica uma letra e 0 indica um dígito
 Plane::Plane(string name, int flyTime, bool VIP, bool flying, int fuel = 0) {
@@ -43,6 +60,7 @@ Plane::Plane(string name, int flyTime, bool VIP, bool flying, int fuel = 0) {
     this->VIP = VIP;
     this->flying = flying;
     this->timeWaiting = 0;
+    this->priority = 0;
 }
 
 void Plane::setName(string name) {
@@ -66,3 +84,34 @@ void Plane::updatePriority() {
     if (VIP) priority = EMERGENCY;
     else priority = timeWaiting;
 }
+
+bool Plane::operator < (Plane &p) {
+    if (this->VIP ^ p.VIP) return p.VIP;
+    else return this->timeWaiting < p.timeWaiting;
+}
+
+bool Plane::operator <= (Plane &p) {
+    if (this->VIP ^ p.VIP) return p.VIP;
+    else return this->timeWaiting <= p.timeWaiting;
+}
+
+bool Plane::operator > (Plane &p) {
+    if (this->VIP ^ p.VIP) return this->VIP;
+    else return this->timeWaiting > p.timeWaiting;
+}
+
+bool Plane::operator >= (Plane &p) {
+    if (this->VIP ^ p.VIP) return this->VIP;
+    else return this->timeWaiting >= p.timeWaiting;
+}
+
+// Overload no operador << para poder imprimir um avião usando cout
+ostream& operator << (ostream &os, Plane &p) {
+    os << "Avião " << p.company << p.planeNumber << p.destiny << ":" << endl;
+    os << "\tCombustível - " << p.fuel << endl;
+    os << "\tEsperando por " << p.timeWaiting << " unidades de tempo" << endl;
+    os << "\tTempo de voo estimado - " << p.flyTime << endl;
+    os << "\tPrioridade - " << p.priority << endl;
+}
+
+#endif
