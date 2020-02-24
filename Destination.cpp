@@ -16,6 +16,9 @@ Destination::Destination(string t_name, int t_distance)
 
 Destination::Destination() : name(""), distance(0) {}
 
+string Destination::getName() { return this->name; }
+int Destination::getDistance() { return this->distance; }
+
 void initDestinations() {
 	string destName;
 	int destDist;
@@ -29,14 +32,10 @@ void initDestinations() {
 	// Começamos o número de destinos de 0 e vamos lendos eles
 	// ou até acabarem ou até o limite ser atingido
 	numExistingDest = 0;
-	while (cfg >> destName >> destDist && numExistingDest < MAX_DESTINATIONS) {
-		existingDests[numExistingDest].name = destName;
-		existingDests[numExistingDest].distance = destDist;
-		numExistingDest++;
-	}
+	while (cfg >> destName >> destDist && numExistingDest < MAX_DESTINATIONS)
+		existingDests[numExistingDest++] = Destination(destName, destDist);
 
 	// Se não chegamos em um EndOfFile é porque o número máximo de destinos foi
 	// atingido
-	if (!cfg.eof())
-		std::cerr << "Maximum number of destinations reached!" << endl;
+	if (!cfg.eof()) std::cerr << "Maximum number of destinations reached!" << endl;
 }

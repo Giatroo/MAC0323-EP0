@@ -4,8 +4,15 @@
 #define _PLANE_H_
 
 #include <iostream>
+#include "AirCompany.h"
 
 #define EMERGENCY -1
+
+// Qual a chance de um avião ser uma emergência em %
+#define EMERGENCY_RATE 3
+
+// Máximo de combustível que um avião pode ter
+#define MAX_FUEL 200
 
 class Plane {
   private:
@@ -25,8 +32,11 @@ class Plane {
 	// Construtor padrão
 	Plane();
 
-	// Construtor
+	// Construtor1
 	Plane(std::string name, int flyTime, bool VIP, bool flying, int fuel = 0);
+
+	// Construtor2
+	Plane(AirCompany airCompany, bool VIP, bool flying, int fuel = 0);
 
 	void setName(std::string name = "");
 
@@ -48,5 +58,8 @@ class Plane {
 	// ostream& operator << (ostream &os);
 	friend std::ostream &operator<<(std::ostream &os, Plane &p);
 };
+
+// Função que cria um avião randômico e retorna seu endereço
+Plane *createRandomPlane();
 
 #endif

@@ -10,15 +10,20 @@
 std::string const DESTIONATIONS_CFG_PATH = "cfg//Destinations.cfg";
 
 class Destination {
-  public:
+  private:
 	std::string name; // Sigla com três letras do nome do destino
 	int distance;     // Distância do destino até nosso aeroporto
 
+  public:
 	// Construtor padrão
 	Destination();
 
 	// Contrutor já com nome e distância
 	Destination(std::string t_name, int t_distance);
+
+	// Métodos de acesso
+	std::string getName();
+	int getDistance();
 };
 
 // Função que deve ser chamada para criar todos os destinos possíveis

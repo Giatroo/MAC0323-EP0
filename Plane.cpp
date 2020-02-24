@@ -16,12 +16,22 @@ Plane::Plane()
 // O parametro name deve ser do padrão AA00AAA onde A indica uma letra e 0
 // indica um dígito
 Plane::Plane(string name, int flyTime, bool VIP, bool flying, int fuel)
-    : fuel(fuel),
-      flyTime(flyTime),
-      VIP(VIP),
-      flying(flying),
-      timeWaiting(0) {
+    : fuel(fuel), flyTime(flyTime), VIP(VIP), flying(flying), timeWaiting(0) {
 	setName(name);
+	updatePriority();
+}
+
+Plane::Plane(AirCompany airCompany, bool VIP, bool flying, int fuel)
+    : VIP(VIP), fuel(fuel), flying(flying), timeWaiting(0) {
+	string name = "";
+	int destinationNum = rand() % airCompany.getNumDestinations();
+
+	name += airCompany.getName();
+	name += to_string(rand() % 1000);
+	name += airCompany.getDestination(destinationNum).getName();
+	setName(name);
+
+	flyTime = airCompany.getDestination(destinationNum).getDistance();
 	updatePriority();
 }
 
@@ -71,4 +81,15 @@ ostream &operator<<(ostream &os, Plane &p) {
 	os << "\tTempo de voo estimado - " << p.flyTime << endl;
 	os << "\tPrioridade - " << p.priority << endl;
 	return os;
+}
+
+Plane *createRandomPlane() {
+	// Companhia aérea aleatória
+	AirCompany *comp = &existingCompanies[rand() % numExistingCompanies];
+	bool VIP = (rand() % 100 < EMERGENCY_RATE); // EMERGENCY_RATE % de chance de ser VIP
+	bool flying = (rand() % 100 < 50);          // 50% de chance de estar voando
+	int fuel = rand() % MAX_FUEL;               // Combustível aleatório menor
+	                                            // que o máximo possível
+
+	return new Plane(*comp, VIP, flying, fuel);
 }
