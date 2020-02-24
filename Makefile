@@ -6,7 +6,7 @@ all : main
 	mv *.gch ${OBJ}
 	@echo "Compilado corretamente"
 
-main : main.cpp Priority_Queue.h Plane.o Destination.o AirCompany.o
+main : main.cpp Priority_Queue.h Pointer_Priority_Queue.h Plane.o Destination.o AirCompany.o
 	${CC} $^ -o $@
 
 Plane.o : Plane.cpp Plane.h
@@ -20,4 +20,5 @@ Destination.o : Destination.cpp Destination.h
 
 clean: 
 	rm main
-	rm *.o
+	rm ${OBJ}/*.o
+	rm ${OBJ}/*.gch

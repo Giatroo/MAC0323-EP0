@@ -8,17 +8,17 @@
 
 template <class T>
 class Priority_Queue {
-  private:
+  protected:
 	T *item;      // Heap implementado em array (1-indexed)
 	int numItems; // Num de elementos no heap
 	int MAX;      // Tamanho do array
 
-	// Funções sobe-heap e desce-heap vistas em ED1
-	void upheap(int i);
-	void downheap(int i);
-
+  private:
 	// Aloca um array novo de tamanho size e copia o antigo no novo
 	void resize(int size);
+	// Funções sobe-heap e desce-heap vistas em ED1
+	virtual void upheap(int i);
+	virtual void downheap(int i);
 
   public:
 	// Construtor padrão
@@ -43,7 +43,7 @@ class Priority_Queue {
 	bool isEmpty();
 
 	// Imprime todos os elementos do heap
-	void debug();
+	virtual void debug();
 };
 
 template <class T>
@@ -51,7 +51,7 @@ Priority_Queue<T>::Priority_Queue() : numItems(0), MAX(2), item(new T[2]) {}
 
 template <class T>
 Priority_Queue<T>::Priority_Queue(T arr[], int len) {
-	for (int i = 0; i < len; i++) this->Insert(arr[i]);
+	for (int i = 0; i < len; i++) this->insert(arr[i]);
 }
 
 template <class T>
@@ -63,7 +63,7 @@ Priority_Queue<T>::~Priority_Queue() {
 template <class T>
 void Priority_Queue<T>::upheap(int i) {
 	if (i < 0 || i >= MAX) {
-		std::cout << "Erro no upheap: " << i << " não é uma posição válida!"
+		std::cerr << "Erro no upheap: " << i << " não é uma posição válida!"
 		          << std::endl;
 		return;
 	}
@@ -79,7 +79,7 @@ void Priority_Queue<T>::upheap(int i) {
 template <class T>
 void Priority_Queue<T>::downheap(int i) {
 	if (i < 0 || i >= MAX) {
-		std::cout << "Erro no upheap: " << i << " não é uma posição válida!"
+		std::cerr << "Erro no upheap: " << i << " não é uma posição válida!"
 		          << std::endl;
 		return;
 	}

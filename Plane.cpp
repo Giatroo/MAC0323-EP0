@@ -20,9 +20,9 @@ Plane::Plane(string name, int flyTime, bool VIP, bool flying, int fuel)
       flyTime(flyTime),
       VIP(VIP),
       flying(flying),
-      timeWaiting(0),
-      priority(0) {
+      timeWaiting(0) {
 	setName(name);
+	updatePriority();
 }
 
 void Plane::setName(string name) {
