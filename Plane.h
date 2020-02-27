@@ -16,17 +16,17 @@
 
 class Plane {
   private:
-	std::string company; // Código de 2 letras para a compania do avião
-	int planeNumber;     // Número de três dígitos do avião
-	std::string destiny; // Código de 3 letras para o destino do voo
-	int fuel;            // Combustível do avião
-	int timeWaiting;     // Tempo que o avião está esperando para decolar
-	int flyTime;         // Tempo de voo estimado
-	bool VIP;            // Very important plane (emergência)
-	int priority;        // Número da prioridade do avião
-	// Variável que indica se o avião está voando ou se está esperando para
-	// decolar
-	bool flying;
+	std::string company;     // Código de 2 letras para a compania do avião
+	int planeNumber;         // Número de três dígitos do avião
+	std::string destiny;     // Código de 3 letras para o destino do voo
+	int fuel;                // Combustível do avião
+	int timeWaiting;         // Tempo que o avião está esperando para decolar
+	int avgTimeToLeaveQueue; // Tempo esperado para que o avião saia da fila
+	int flyTime;             // Tempo de voo estimado
+	bool VIP;                // Very important plane (emergência)
+	int priority;            // Número da prioridade do avião
+	bool flying;             // Variável que indica se o avião está voando ou se está
+	                         // esperando para decolar
 
   public:
 	// Construtor padrão
@@ -45,6 +45,21 @@ class Plane {
 
 	// Atualiza a prioridade do avião baseando-se em suas características
 	void updatePriority();
+
+	// Diz se o avião está voando ou está espernado para decolar
+	bool isFlying();
+
+	// Retorna a quantidade de combustível do avião
+	int getFuel();
+
+	// Retorna o total de tempo que o avião está esperando
+	int getTimeWaiting();
+
+	// Retorna o tempo médio esperado para aterrissar/decolar
+	int getAvgTimeToLeaveQueue();
+
+	// Retorna se o avião é muito importante ou não
+	bool isVIP();
 
 	// Overload no operador < para determinar se um avião tem mais ou menos
 	// prioridade que outro

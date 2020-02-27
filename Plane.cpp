@@ -28,10 +28,10 @@ Plane::Plane(AirCompany airCompany, bool VIP, bool flying, int fuel)
 
 	name += airCompany.getName();
 	name += to_string(rand() % 1000);
-	name += airCompany.getDestination(destinationNum).getName();
+	name += airCompany.getDestination(destinationNum)->getName();
 	setName(name);
 
-	flyTime = airCompany.getDestination(destinationNum).getDistance();
+	flyTime = airCompany.getDestination(destinationNum)->getDistance();
 	updatePriority();
 }
 
@@ -56,6 +56,16 @@ void Plane::update() {
 }
 
 void Plane::updatePriority() { priority = (VIP) ? EMERGENCY : timeWaiting; }
+
+bool Plane::isFlying() { return flying; }
+
+int Plane::getFuel() { return fuel; }
+
+int Plane::getTimeWaiting() { return timeWaiting; }
+
+int Plane::getAvgTimeToLeaveQueue() { return avgTimeToLeaveQueue; }
+
+bool Plane::isVIP() { return VIP; }
 
 bool Plane::operator<(Plane &p) {
 	return (this->VIP ^ p.VIP) ? p.VIP : this->timeWaiting < p.timeWaiting;

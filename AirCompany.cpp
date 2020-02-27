@@ -35,7 +35,7 @@ AirCompany::AirCompany(string t_name, int t_numDestinations) {
 
 		// Se não sorteei o número, adiciono esse destino aos destinos
 		// da minha companhia
-		this->addDestination(existingDests[random]);
+		this->addDestination(random);
 		// e coloco o número na lista de números sorteados
 		s.insert(random);
 	}

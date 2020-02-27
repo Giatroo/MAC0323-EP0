@@ -1,9 +1,10 @@
 #include <iostream>
 #include "AirCompany.h"
+#include "Airport.h"
 #include "Destination.h"
 #include "Plane.h"
-#include "Pointer_Priority_Queue.h"
 #include "Priority_Queue.h"
+#include "Queue.h"
 
 using namespace std;
 
@@ -46,8 +47,8 @@ void testeHeap() {
 	pq.insert(D);
 	pq.insert(C);
 	pq.insert(A);
-	pq.debug();
-	ppq.debug();
+	pq.debug(cout);
+	ppq.debug(cout);
 }
 
 void initDestsAndCompanies() {
@@ -77,6 +78,26 @@ int main() {
 	srand(time(0));
 	initDestinations();
 	initAirCompanies();
+
+	// Pointer_Queue<Plane *> fila;
+	// for (int i = 0; i < 10; i++) { fila.enqueue(createRandomPlane()); }
+
+	// fila.PrintQueue(true);
+	// cout << endl;
+	// fila.PrintQueue(false);
+	// cout << endl;
+
+	Queue<int> fila;
+	fila.enqueue(5);
+	fila.enqueue(7);
+	fila.enqueue(2);
+	fila.enqueue(-1);
+	fila.enqueue(5);
+	fila.enqueue(3);
+	fila.PrintQueue(true);
+	cout << endl;
+	fila.PrintQueue(false);
+	cout << endl;
 
 	return 0;
 }
