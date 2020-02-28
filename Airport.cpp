@@ -1,5 +1,5 @@
-#include "Airport.h"
 #include <fstream>
+#include "Airport.h"
 
 Airport::Airport()
     : totalVIP(0),
@@ -18,7 +18,7 @@ void Airport::addPlane(Plane *p) {
 	}
 
 	if (p->isVIP()) totalVIP++;
-	queue.insert(p);
+	// queue.insert(p);
 }
 
 void Airport::update() {
@@ -32,12 +32,13 @@ void Airport::update() {
 
 void Airport::showWaitingPlanes() {
 	std::ofstream file("temp.txt");
-	if (file.is_open()) {
-		file << "Exibindo conteúdo da fila:" << std::endl;
-		queue.debug(file);
-		file.close();
-		system("less temp.txt");
-		system("rm temp.txt");
-	} else
-		std::cerr << "Não foi possível imprimir" << std::endl;
+
+	if (!file.is_open())
+		throw MyException(ErrorTypes[FILE_NOT_FOUND], "Airport::showWaitingPlanes");
+
+	file << "Exibindo conteúdo da fila:" << std::endl;
+	// queue.debug(file);
+	file.close();
+	system("less temp.txt");
+	system("rm temp.txt");
 }

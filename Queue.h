@@ -3,6 +3,8 @@
 #ifndef _QUEUE_H_
 #define _QUEUE_H_
 
+#include "MyException.h"
+
 #include <iostream>
 
 // Classe de tipo genérica para um nó de uma lista ligada.
@@ -150,14 +152,18 @@ QueueNode<T>::QueueNode(T t_element) : QueueNode<T>() {
 }
 template <class T>
 T QueueNode<T>::getElement() const {
-	if (this != nullptr) return this->element;
-	/* else throw NullPointerException; */
+	if (this == nullptr)
+		throw MyException(ErrorTypes[NULL_POINTER], "QueueNode::getElement");
+
+	return this->element;
 }
 
 template <class T>
 void QueueNode<T>::setElement(T t_element) {
-	if (this != nullptr) this->element = t_element;
-	/* else throw NullPointerException; */
+	if (this == nullptr)
+		throw MyException(ErrorTypes[NULL_POINTER], "QueueNode::setElement");
+
+	this->element = t_element;
 }
 
 // QUEUE
@@ -203,7 +209,8 @@ void Queue<T>::enqueue(T t_element) {
 
 template <class T>
 void Queue<T>::dequeue() {
-	if (this->empty()) throw "Trying dequeue an empty queue!";
+	if (this->empty())
+		throw MyException(ErrorTypes[EMPTY_DATA_STRUCTURE], "Queue::dequeue");
 
 	// Vamos remover o anterior à frente (o começo da fila)
 	QueueNode<T> *trash = front->prevNode;
@@ -225,12 +232,20 @@ void Queue<T>::dequeue() {
 
 template <class T>
 T Queue<T>::getFront() {
-	if (front != nullptr && !this->empty()) return this->front->prevNode->getElement();
+	if (front == nullptr) throw MyException(ErrorTypes[NULL_POINTER], "Queue::getFront");
+	if (this->empty())
+		throw MyException(ErrorTypes[EMPTY_DATA_STRUCTURE], "Queue::getFront");
+
+	return this->front->prevNode->getElement();
 }
 
 template <class T>
 T Queue<T>::getBack() {
-	if (back != nullptr && !this->empty()) return this->back->nextNode->getElement();
+	if (back == nullptr) throw MyException(ErrorTypes[NULL_POINTER], "Queue::getBack");
+	if (this->empty())
+		throw MyException(ErrorTypes[EMPTY_DATA_STRUCTURE], "Queue::getBack");
+
+	return this->back->nextNode->getElement();
 }
 
 template <class T>

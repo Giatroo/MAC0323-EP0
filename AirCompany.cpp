@@ -1,5 +1,6 @@
 #include "AirCompany.h"
 #include "Destination.h"
+#include "MyException.h"
 
 #include <cstdlib>
 #include <fstream>
@@ -43,7 +44,7 @@ AirCompany::AirCompany(string t_name, int t_numDestinations) {
 
 void AirCompany::addDestination(int t_dist) {
 	if (t_dist < 0 || t_dist > numExistingDest)
-		throw "AirCompany::addDestination: indexOutOfArrayBounds\n";
+		throw MyException(ErrorTypes[INDEX_OUT_OF_BOUNDS], "AirCompany::addDestination");
 
 	this->destinations[numDestinations++] = &existingDests[t_dist];
 }
@@ -52,7 +53,7 @@ std::string AirCompany::getName() { return this->name; }
 int AirCompany::getNumDestinations() { return this->numDestinations; }
 Destination *AirCompany::getDestination(int i) {
 	if (i < 0 || i > this->numDestinations)
-		throw "AirCompany::getDestination: indexOutOfArrayBounds\n";
+		throw MyException(ErrorTypes[INDEX_OUT_OF_BOUNDS], "AirCompany::addDestination");
 
 	return this->destinations[i];
 }
@@ -64,7 +65,7 @@ void initAirCompanies() {
 	// input file stream do arquivo .cfg com informações sobre as companias
 	ifstream cfg(COMPANIES_CFG_PATH);
 
-	if (!cfg.is_open()) throw "initAirCompanies: File could not be open!\n";
+	if (!cfg.is_open()) throw MyException(ErrorTypes[FILE_NOT_FOUND], "initAirCompanies");
 
 	while (cfg >> name >> numDestinations && numExistingCompanies < MAX_COMPANIES)
 		existingCompanies[numExistingCompanies++] = AirCompany(name, numDestinations);

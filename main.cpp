@@ -51,33 +51,16 @@ void testeHeap() {
 	ppq.debug(cout);
 }
 
-void initDestsAndCompanies() {
-	cout << "Antes de inicializar os destinos" << endl;
-
-	initDestinations();
-
-	cout << "Destinos inicializados" << endl;
-	for (int i = 0; i < numExistingDest; i++)
-		cout << existingDests[i].getName() << " " << existingDests[i].getDistance()
-		     << endl;
-
-	cout << "Antes de inicializar as companhias" << endl;
-
-	initAirCompanies();
-
-	cout << "Companhias inicializadas" << endl;
-	for (int i = 0; i < numExistingCompanies; i++) {
-		cout << existingCompanies[i].getName() << " "
-		     << existingCompanies[i].getNumDestinations() << ":" << endl;
-		for (int j = 0; j < existingCompanies[i].getNumDestinations(); j++)
-			cout << "\t" << existingCompanies[i].getDestination(j)->getName() << endl;
-	}
+void init() {
+	try {
+		initDestinations();
+		initAirCompanies();
+	} catch (MyException e) { e.what(); }
 }
 
 int main() {
 	srand(time(0));
-	initDestinations();
-	initAirCompanies();
+	init();
 
 	// Pointer_Queue<Plane *> fila;
 	// for (int i = 0; i < 10; i++) { fila.enqueue(createRandomPlane()); }

@@ -6,7 +6,6 @@
 #define _AIRPORT_
 
 #include "Plane.h"
-#include "Pointer_Priority_Queue.h"
 
 class Airport {
   private:
@@ -15,8 +14,6 @@ class Airport {
 	int totalVIP;
 	int totalFuelOnPlanesToLand;
 	int totalFuelOnPlanesThatLanded;
-	Plane *runway[3];
-	Pointer_Priority_Queue<Plane *> queue;
 	int cur_time;
 	int k; // Máximo de aviões que podem aparecer por unidade de tempo
 

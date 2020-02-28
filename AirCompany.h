@@ -5,6 +5,7 @@
 
 #include <string>
 #include "Destination.h"
+#include "MyException.h"
 
 #define MAX_COMPANIES 100
 

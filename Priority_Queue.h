@@ -3,6 +3,8 @@
 #ifndef _PRIORITY_QUEUE_H_
 #define _PRIORITY_QUEUE_H_
 
+#include "MyException.h"
+
 #include <algorithm>
 #include <fstream>
 #include <iostream>
@@ -99,10 +101,8 @@ Priority_Queue<T>::~Priority_Queue() {
 
 template <class T>
 void Priority_Queue<T>::upheap(int i) {
-	if (i < 0 || i >= MAX) {
-		std::cerr << "Erro no upheap: " << i << " não é uma posição válida!" << std::endl;
-		return;
-	}
+	if (i < 0 || i >= MAX)
+		throw MyException(ErrorTypes[INDEX_OUT_OF_BOUNDS], "Priority_Queue::upheap");
 
 	T v = item[i];
 	while (i != 1 && item[i / 2] <= v) {
@@ -114,10 +114,8 @@ void Priority_Queue<T>::upheap(int i) {
 
 template <class T>
 void Priority_Queue<T>::downheap(int i) {
-	if (i < 0 || i >= MAX) {
-		std::cerr << "Erro no upheap: " << i << " não é uma posição válida!" << std::endl;
-		return;
-	}
+	if (i < 0 || i >= MAX)
+		throw MyException(ErrorTypes[INDEX_OUT_OF_BOUNDS], "Priority_Queue::downheap");
 
 	T v = item[i];
 	while (2 * i <= numItems) {
@@ -140,7 +138,9 @@ void Priority_Queue<T>::insert(T e) {
 
 template <class T>
 void Priority_Queue<T>::removeFront() {
-	if (this->isEmpty()) return;
+	if (this->isEmpty())
+		throw MyException(ErrorTypes[EMPTY_DATA_STRUCTURE],
+		                  "Priority_Queue::removeFront");
 
 	std::swap(item[1], item[numItems--]);
 	downheap(1);
@@ -148,7 +148,11 @@ void Priority_Queue<T>::removeFront() {
 
 template <class T>
 T Priority_Queue<T>::front() {
-	if (!this->isEmpty()) return item[1];
+	if (this->isEmpty())
+		throw MyException(ErrorTypes[EMPTY_DATA_STRUCTURE],
+		                  "Priority_Queue::removeFront");
+
+	return item[1];
 }
 
 template <class T>
@@ -182,10 +186,9 @@ void Priority_Queue<T>::debug(std::ostream &t_stream) {
 
 template <class T>
 void Pointer_Priority_Queue<T>::upheap(int i) {
-	if (i < 0 || i >= this->MAX) {
-		std::cout << "Erro no upheap: " << i << " não é uma posição válida!" << std::endl;
-		return;
-	}
+	if (i < 0 || i >= this->MAX)
+		throw MyException(ErrorTypes[INDEX_OUT_OF_BOUNDS],
+		                  "Pointer_Priority_Queue::upheap");
 
 	T v = this->item[i];
 	while (i != 1 && *this->item[i / 2] <= *v) {
@@ -197,10 +200,9 @@ void Pointer_Priority_Queue<T>::upheap(int i) {
 
 template <class T>
 void Pointer_Priority_Queue<T>::downheap(int i) {
-	if (i < 0 || i >= this->MAX) {
-		std::cout << "Erro no upheap: " << i << " não é uma posição válida!" << std::endl;
-		return;
-	}
+	if (i < 0 || i >= this->MAX)
+		throw MyException(ErrorTypes[INDEX_OUT_OF_BOUNDS],
+		                  "Pointer_Priority_Queue::downheap");
 
 	T v = this->item[i];
 	while (2 * i <= this->numItems) {
