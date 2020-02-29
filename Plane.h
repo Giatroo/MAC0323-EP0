@@ -12,7 +12,7 @@
 #define EMERGENCY_RATE 3
 
 // Máximo de combustível que um avião pode ter
-#define MAX_FUEL 200
+#define MAX_FUEL 1000
 
 class Plane {
   private:
@@ -25,8 +25,8 @@ class Plane {
 	int flyTime;             // Tempo de voo estimado
 	bool VIP;                // Very important plane (emergência)
 	int priority;            // Número da prioridade do avião
-	bool flying;             // Variável que indica se o avião está voando ou se está
-	                         // esperando para decolar
+	bool flying;             // Variável que indica se o avião está
+	                         // voando ou se está  esperando para decolar
 
   public:
 	// Construtor padrão
@@ -57,6 +57,9 @@ class Plane {
 
 	// Retorna o tempo médio esperado para aterrissar/decolar
 	int getAvgTimeToLeaveQueue();
+
+	// Atribuir ao tempo médio esperado para aterrissar/decolar
+	void setAvgTimeToLeaveQueue(int t_time);
 
 	// Retorna se o avião é muito importante ou não
 	bool isVIP();

@@ -7,5 +7,6 @@ MyException::ErrorType::ErrorType(std::string t_errorName, int t_errorCode)
     : errorName(t_errorName), errorCode(t_errorCode) {}
 
 // Construtor da MyException
-MyException::MyException(ErrorType t_errorType, std::string t_method)
-    : errorType(t_errorType), method(t_method) {}
+MyException::MyException(ErrorType t_errorType, std::string t_method,
+                         std::string t_text)
+    : errorType(t_errorType), method(t_method), text(t_text) {}

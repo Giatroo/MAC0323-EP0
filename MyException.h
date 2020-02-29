@@ -13,11 +13,12 @@
  * Ela herda da classe padrão de exceptions do C++ e sobrescreve
  * o método 'what', que retorna uma mensagem dizendo o que aconteceu.
  *
- * Gosto de ter os campos obrigatórios: method e errorType.
+ * Gosto de ter os campos obrigatórios (method e errorType) e um opcional (text).
  *  * O primeiro é do tipo string e é o nome da rotina em que a exception foi
  * lançada.
  *  * O segundo é tipo ErrorType, que contém um código e o um nome de erro, como
  *    ArithmeticException, NullPointerException ...
+ *  * O terceiro é do tipo string e é um texto descrevendo o erro
  *
  */
 class MyException : public std::exception {
@@ -32,9 +33,11 @@ class MyException : public std::exception {
   private:
 	ErrorType errorType;
 	std::string method;
+	std::string text;
 
   public:
-	MyException(ErrorType t_errorType, std::string t_method);
+	MyException(ErrorType t_errorType, std::string t_method,
+	            std::string t_text = "");
 
 	const char *what() {
 		std::string s = "";
@@ -43,8 +46,9 @@ class MyException : public std::exception {
 		s += this->errorType.errorName;
 		s += " Code ";
 		s += std::to_string(this->errorType.errorCode);
-		s += "\0";
-		std::cerr << s.c_str() << std::endl;
+		s += "\n";
+		s += this->text;
+		std::cerr << s.c_str() << (this->text == "" ? "" : "\n");
 		return s.c_str();
 	}
 };

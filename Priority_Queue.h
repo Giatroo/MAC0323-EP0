@@ -115,7 +115,8 @@ void Priority_Queue<T>::upheap(int i) {
 template <class T>
 void Priority_Queue<T>::downheap(int i) {
 	if (i < 0 || i >= MAX)
-		throw MyException(ErrorTypes[INDEX_OUT_OF_BOUNDS], "Priority_Queue::downheap");
+		throw MyException(ErrorTypes[INDEX_OUT_OF_BOUNDS],
+		                  "Priority_Queue::downheap");
 
 	T v = item[i];
 	while (2 * i <= numItems) {

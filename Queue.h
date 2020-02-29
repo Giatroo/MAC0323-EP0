@@ -80,8 +80,13 @@ class Queue {
 	// Método para retornar um iterador para o último elemento da fila
 	Queue_Iterator<T> getBackIterator();
 
+	// Esse método itera sobre todos os elementos da fila aplicando a função
+	// func sobre eles
+	void Iterate(void (*func)(T element));
+
 	// Método para imprimir todos os elementos da fila
-	// Imprime do primeiro para o último a menos que 'false' seja passado como parâmetro
+	// Imprime do primeiro para o último a menos que 'false' seja passado como
+	// parâmetro
 	// O segundo é para mudar onde imprimir
 	virtual void PrintQueue(bool firstToLast = true, std::ostream &out = std::cout);
 };
@@ -91,7 +96,8 @@ class Queue {
  * getBackIterator de um objeto Queue<T>
  *
  * Os operadores ++, -- e * estão disponívels para, respectivamente,
- * avançar o iterador (ir para nextElement), voltar o iterador (ir para prevElement) e
+ * avançar o iterador (ir para nextElement), voltar o iterador (ir para prevElement)
+ * e
  * acessar o conteúdo do iterador. (Versões += e -= também estão disponíveis)
  */
 template <class T>
@@ -169,7 +175,8 @@ void QueueNode<T>::setElement(T t_element) {
 // QUEUE
 
 template <class T>
-Queue<T>::Queue() : front(new QueueNode<T>()), back(new QueueNode<T>()), numNodes(0) {
+Queue<T>::Queue()
+    : front(new QueueNode<T>()), back(new QueueNode<T>()), numNodes(0) {
 	front->prevNode = back;
 	front->nextNode = nullptr;
 	back->prevNode = nullptr;
@@ -232,7 +239,8 @@ void Queue<T>::dequeue() {
 
 template <class T>
 T Queue<T>::getFront() {
-	if (front == nullptr) throw MyException(ErrorTypes[NULL_POINTER], "Queue::getFront");
+	if (front == nullptr)
+		throw MyException(ErrorTypes[NULL_POINTER], "Queue::getFront");
 	if (this->empty())
 		throw MyException(ErrorTypes[EMPTY_DATA_STRUCTURE], "Queue::getFront");
 
@@ -241,7 +249,8 @@ T Queue<T>::getFront() {
 
 template <class T>
 T Queue<T>::getBack() {
-	if (back == nullptr) throw MyException(ErrorTypes[NULL_POINTER], "Queue::getBack");
+	if (back == nullptr)
+		throw MyException(ErrorTypes[NULL_POINTER], "Queue::getBack");
 	if (this->empty())
 		throw MyException(ErrorTypes[EMPTY_DATA_STRUCTURE], "Queue::getBack");
 
@@ -308,6 +317,17 @@ Queue_Iterator<T> Queue<T>::getBackIterator() {
 	Queue_Iterator<T> it;
 	it.curNode = back;
 	return it;
+}
+
+template <class T>
+void Queue<T>::Iterate(void (*func)(T element)) {
+	Queue_Iterator<T> it = getFrontIterator();
+	Queue_Iterator<T> end = getBackIterator();
+	it--;
+	while ((*it).prevNode != nullptr) {
+		func((*it).getElement());
+		it--;
+	}
 }
 
 template <class T>

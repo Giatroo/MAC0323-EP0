@@ -28,7 +28,9 @@ void initDestinations() {
 	ifstream cfg(DESTIONATIONS_CFG_PATH);
 
 	// Se não foi possível abrir, jogando uma exceção
-	if (!cfg.is_open()) throw MyException(ErrorTypes[FILE_NOT_FOUND], "initDestinations");
+	if (!cfg.is_open())
+		throw MyException(ErrorTypes[FILE_NOT_FOUND], "initDestinations",
+		                  "File " + DESTIONATIONS_CFG_PATH + " could not be open.");
 
 	// Começamos o número de destinos de 0 e vamos lendos eles
 	// ou até acabarem ou até o limite ser atingido

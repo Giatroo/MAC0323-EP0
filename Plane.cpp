@@ -65,6 +65,10 @@ int Plane::getTimeWaiting() { return timeWaiting; }
 
 int Plane::getAvgTimeToLeaveQueue() { return avgTimeToLeaveQueue; }
 
+void Plane::setAvgTimeToLeaveQueue(int t_time) {
+	this->avgTimeToLeaveQueue = t_time;
+}
+
 bool Plane::isVIP() { return VIP; }
 
 bool Plane::operator<(Plane &p) {
@@ -86,20 +90,25 @@ bool Plane::operator>=(Plane &p) {
 // Overload no operador << para poder imprimir um avião usando cout
 ostream &operator<<(ostream &os, Plane &p) {
 	os << "Avião " << p.company << p.planeNumber << p.destiny << ":" << endl;
-	os << "\tCombustível - " << p.fuel << endl;
 	os << "\tEsperando por " << p.timeWaiting << " unidades de tempo" << endl;
-	os << "\tTempo de voo estimado - " << p.flyTime << endl;
-	os << "\tPrioridade - " << p.priority << endl;
+	os << "\tTempo estimado para sair da fila " << p.avgTimeToLeaveQueue
+	   << " unidades de tempo" << endl;
+	if (p.isFlying())
+		os << "\tCombustível - " << p.fuel << endl;
+	else
+		os << "\tTempo de voo estimado - " << p.flyTime << endl;
+	// os << "\tPrioridade - " << p.priority << endl;
 	return os;
 }
 
 Plane *createRandomPlane() {
 	// Companhia aérea aleatória
 	AirCompany *comp = &existingCompanies[rand() % numExistingCompanies];
-	bool VIP = (rand() % 100 < EMERGENCY_RATE); // EMERGENCY_RATE % de chance de ser VIP
-	bool flying = (rand() % 100 < 50);          // 50% de chance de estar voando
-	int fuel = rand() % MAX_FUEL;               // Combustível aleatório menor
-	                                            // que o máximo possível
+	bool VIP =
+	    (rand() % 100 < EMERGENCY_RATE); // EMERGENCY_RATE % de chance de ser VIP
+	bool flying = (rand() % 100 < 50);   // 50% de chance de estar voando
+	int fuel = rand() % MAX_FUEL;        // Combustível aleatório menor
+	                                     // que o máximo possível
 
 	return new Plane(*comp, VIP, flying, fuel);
 }

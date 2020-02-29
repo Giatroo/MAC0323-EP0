@@ -55,32 +55,20 @@ void init() {
 	try {
 		initDestinations();
 		initAirCompanies();
-	} catch (MyException e) { e.what(); }
+	} catch (MyException e) {
+		e.what();
+		cerr << "Exiting the program." << endl;
+		exit(-1);
+	}
 }
 
 int main() {
 	srand(time(0));
 	init();
 
-	// Pointer_Queue<Plane *> fila;
-	// for (int i = 0; i < 10; i++) { fila.enqueue(createRandomPlane()); }
+	Airport airport(100, 5);
 
-	// fila.PrintQueue(true);
-	// cout << endl;
-	// fila.PrintQueue(false);
-	// cout << endl;
-
-	Queue<int> fila;
-	fila.enqueue(5);
-	fila.enqueue(7);
-	fila.enqueue(2);
-	fila.enqueue(-1);
-	fila.enqueue(5);
-	fila.enqueue(3);
-	fila.PrintQueue(true);
-	cout << endl;
-	fila.PrintQueue(false);
-	cout << endl;
+	for (int i = 0; i < 5; i++) { airport.update(); }
 
 	return 0;
 }
