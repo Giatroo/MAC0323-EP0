@@ -116,7 +116,7 @@ void Airport::update() {
 		if (timeToBeFree[i] != 0) timeToBeFree[i]--;
 
 	// Agora passamos por todos os aviões em fila atualizando-os
-	for (int i = 0; i < 3; i++) queue[i].Iterate([](Plane *p) { p->update(); });
+	for (int i = 0; i < 3; i++) queue[i].iterate([](Plane *p) { p->update(); });
 }
 
 void Airport::showWaitingPlanes() {

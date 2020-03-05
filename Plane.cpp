@@ -89,7 +89,8 @@ bool Plane::operator>=(Plane &p) {
 
 // Overload no operador << para poder imprimir um avião usando cout
 ostream &operator<<(ostream &os, Plane &p) {
-	os << "Avião " << p.company << p.planeNumber << p.destiny << ":" << endl;
+	os << "Avião " << p.company << p.planeNumber << p.destiny << ":" 
+		<< (p.isVIP() ? "\t VIP" : " ") << endl;
 	os << "\tEsperando por " << p.timeWaiting << " unidades de tempo" << endl;
 	os << "\tTempo estimado para sair da fila " << p.avgTimeToLeaveQueue
 	   << " unidades de tempo" << endl;
