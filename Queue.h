@@ -84,6 +84,12 @@ class Queue {
 	// func sobre eles
 	void Iterate(void (*func)(T element));
 
+	// Método que remove um elemento da fila apontado por um iterador
+	T RemoveFrom(Queue_Iterator<T> &it);
+
+	// Método que adiciona um elemento na frente de um elemento apontado por um iterador
+	void AddIn(Queue_Iterator<T> &it, T e);
+
 	// Método para imprimir todos os elementos da fila
 	// Imprime do primeiro para o último a menos que 'false' seja passado como
 	// parâmetro
@@ -271,7 +277,7 @@ bool Queue<T>::empty() {
 
 template <class T>
 QueueNode<T> Queue_Iterator<T>::operator*() {
-	return *this->curNode;
+	return *(this->curNode);
 }
 
 template <class T>
@@ -295,12 +301,12 @@ void Queue_Iterator<T>::operator--(int) {
 
 template <class T>
 void Queue_Iterator<T>::operator+=(int n) {
-	for (int i = 0; i < n; i++) this ++;
+	for (int i = 0; i < n; i++) this->operator++();
 }
 
 template <class T>
 void Queue_Iterator<T>::operator-=(int n) {
-	for (int i = 0; i < n; i++) this --;
+	for (int i = 0; i < n; i++) this->operator--();
 }
 
 // QUEUE (métodos que usam iteradores)
@@ -317,6 +323,25 @@ Queue_Iterator<T> Queue<T>::getBackIterator() {
 	Queue_Iterator<T> it;
 	it.curNode = back;
 	return it;
+}
+
+template <class T>
+T Queue<T>::RemoveFrom(Queue_Iterator<T> &it) {
+	QueueNode<T> n = *it;
+	n.prevNode->nextNode = n.nextNode;
+	n.nextNode->prevNode = n.prevNode;
+	T e = n.getElement();
+	return e;
+}
+
+template <class T>
+void Queue<T>::AddIn(Queue_Iterator<T> &it, T e) {
+	QueueNode<T> n = *it;
+	QueueNode<T> *newNode = new QueueNode<T>(e); // Criamos um novo nó com o elemento e
+	n.nextNode->prevNode = newNode;
+	newNode->nextNode = n.nextNode;
+	newNode->prevNode = it.curNode;
+	n.nextNode = newNode;
 }
 
 template <class T>

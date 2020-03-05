@@ -66,9 +66,26 @@ int main() {
 	srand(time(0));
 	init();
 
-	Airport airport(100, 5);
+	/*Airport airport(100, 5);
 
-	for (int i = 0; i < 5; i++) { airport.update(); }
+	for (int i = 0; i < 5; i++) { airport.update(); }*/
+
+	Pointer_Queue<Plane *> q;
+	q.enqueue(createRandomPlane());
+	q.enqueue(createRandomPlane());
+	q.enqueue(createRandomPlane());
+	q.PrintQueue();
+	auto it = q.getBackIterator();
+	it+=2;
+	cout << endl;
+	cout << *(*it).getElement() << endl << endl << endl;
+	q.RemoveFrom(it);
+	q.PrintQueue();
+	it = q.getBackIterator();
+	it++;
+	q.AddIn(it, createRandomPlane());
+	cout << endl << endl;
+	q.PrintQueue();
 
 	return 0;
 }
