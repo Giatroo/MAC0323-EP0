@@ -140,6 +140,10 @@ class Queue_Iterator {
 	// O operador -= deve voltar o iterador n posições
 	// (ou parar no fim da fila se n for muito grande)
 	void operator-=(int n);
+
+	// O operador == retorna true se todos o pointeiro para um
+	// no é igual o ponteiro do outro
+	bool operator==(Queue_Iterator it);
 };
 
 /* Quando T for um pointeiro, é preciso instanciar essa classe */
@@ -307,6 +311,11 @@ void Queue_Iterator<T>::operator+=(int n) {
 template <class T>
 void Queue_Iterator<T>::operator-=(int n) {
 	for (int i = 0; i < n; i++) this->operator--();
+}
+
+template <class T>
+bool Queue_Iterator<T>::operator==(Queue_Iterator it) {
+	return (this->curNode == it->curNode);
 }
 
 // QUEUE (métodos que usam iteradores)

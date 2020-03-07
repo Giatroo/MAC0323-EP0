@@ -12,10 +12,16 @@ Airport::Airport(int t_tot_time, int t_k)
 		totalTimeToLand[i] = 0;
 		totalVIP[i] = 0;
 		totalFuelOnPlanesToLand[i] = 0;
+		lastVIP[i] = queue[i].getFrontIterator();
 	}
 }
 
 void Airport::addPlane(Plane *p) {
+	if (p->isVIP()) addVIP(p);
+	else addNonVIP(p);
+}
+
+void Airport::addNonVIP(Plane *p) {
 	// Vamos buscar qual é a fila que fará com que esse avião
 	// o mínimo possível
 	int minWaitingTime = INT32_MAX;
@@ -55,6 +61,25 @@ void Airport::addPlane(Plane *p) {
 		totalTimeToDeparture[insertQueue] += 2;
 	}
 	queue[insertQueue].enqueue(p);
+}
+
+void Airport::addVIP(Plane *p) {
+	int minWaitingTime = INT32_MAX; // O tempo mínimo de espera desse VIP
+	int insertionQueue = 0; // A fila em que vou inserir o VIP
+
+	for (int i = 0; i < 3; i++) {
+		if (lastVIP[i] == queue[i].getFrontIterator()) {
+			minWaitingTime = 0;
+			insertionQueue = i;
+		} else {
+			if (minWaitingTime > (*lastVIP[i]).getElement()->getTimeWaiting()) {
+				minWaitingTime = (*lastVIP[i]).getElement()->getTimeWaiting();
+				insertionQueue = i;
+			}
+		}
+	}
+
+	
 }
 
 void Airport::removePlane(int t_index) {
