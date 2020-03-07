@@ -9,7 +9,7 @@
 #define EMERGENCY -1
 
 // Qual a chance de um avião ser uma emergência em %
-#define EMERGENCY_RATE 3
+#define EMERGENCY_RATE 100
 
 // Máximo de combustível que um avião pode ter
 #define MAX_FUEL 1000
@@ -39,6 +39,7 @@ class Plane {
 	Plane(AirCompany airCompany, bool VIP, bool flying, int fuel = 0);
 
 	void setName(std::string name = "");
+	std::string getName();
 
 	// Atualiza uma unidade de tempo para o avião
 	void update();

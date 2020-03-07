@@ -28,6 +28,9 @@ class QueueNode {
 
 	// Método para atribuir algo ao elemento
 	void setElement(T t_element);
+
+	bool operator==(QueueNode node);
+	bool operator!=(QueueNode node);
 };
 
 // Protótipo para um iterador sobre nossa fila que será declaro mais abaixo
@@ -87,8 +90,9 @@ class Queue {
 	// Método que remove um elemento da fila apontado por um iterador
 	T removeFrom(Queue_Iterator<T> &it);
 
-	// Método que adiciona um elemento na frente de um elemento apontado por um iterador
-	void addIn(Queue_Iterator<T> &it, T e);
+	// Método que adiciona um elemento na frente de um elemento apontado por um
+	// iterador
+	void addIn(Queue_Iterator<T> *it, T e);
 
 	// Método para imprimir todos os elementos da fila
 	// Imprime do primeiro para o último a menos que 'false' seja passado como
@@ -144,6 +148,10 @@ class Queue_Iterator {
 	// O operador == retorna true se todos o pointeiro para um
 	// no é igual o ponteiro do outro
 	bool operator==(Queue_Iterator it);
+
+	// O operador != retorna true se o ponteiro para um nó
+	// é diferente do outro
+	bool operator!=(Queue_Iterator it);
 };
 
 /* Quando T for um pointeiro, é preciso instanciar essa classe */
@@ -180,6 +188,18 @@ void QueueNode<T>::setElement(T t_element) {
 		throw MyException(ErrorTypes[NULL_POINTER], "QueueNode::setElement");
 
 	this->element = t_element;
+}
+
+template <class T>
+bool QueueNode<T>::operator==(QueueNode node) {
+	return (this->prevNode == node.prevNode && this->nextNode == node.nextNode &&
+	        this->element == node.element);
+}
+
+template <class T>
+bool QueueNode<T>::operator!=(QueueNode node) {
+	return (this->prevNode != node.prevNode || this->nextNode != node.nextNode ||
+	        this->element != node.element);
 }
 
 // QUEUE
@@ -278,7 +298,6 @@ bool Queue<T>::empty() {
 }
 
 // QUEUE_ITERATOR
-
 template <class T>
 QueueNode<T> Queue_Iterator<T>::operator*() {
 	return *(this->curNode);
@@ -315,7 +334,12 @@ void Queue_Iterator<T>::operator-=(int n) {
 
 template <class T>
 bool Queue_Iterator<T>::operator==(Queue_Iterator it) {
-	return (this->curNode == it->curNode);
+	return (*this->curNode == *it);
+}
+
+template <class T>
+bool Queue_Iterator<T>::operator!=(Queue_Iterator it) {
+	return (*this->curNode != *it);
 }
 
 // QUEUE (métodos que usam iteradores)
@@ -340,23 +364,28 @@ T Queue<T>::removeFrom(Queue_Iterator<T> &it) {
 	n.prevNode->nextNode = n.nextNode;
 	n.nextNode->prevNode = n.prevNode;
 	T e = n.getElement();
+	numNodes--;
 	return e;
 }
 
 template <class T>
-void Queue<T>::addIn(Queue_Iterator<T> &it, T e) {
-	QueueNode<T> n = *it;
-	QueueNode<T> *newNode = new QueueNode<T>(e); // Criamos um novo nó com o elemento e
-	n.nextNode->prevNode = newNode;
-	newNode->nextNode = n.nextNode;
-	newNode->prevNode = it.curNode;
-	n.nextNode = newNode;
+void Queue<T>::addIn(Queue_Iterator<T> *it, T e) {
+	// QueueNode<T> n = *it;
+	// Criamos um novo nó com o elemento e
+	QueueNode<T> *newNode;
+	newNode = new QueueNode<T>(e);
+
+	(*it).curNode->nextNode->prevNode = newNode;
+	newNode->nextNode = (*it).curNode->nextNode;
+	newNode->prevNode = (*it).curNode;
+	(*it).curNode->nextNode = newNode;
+
+	numNodes++;
 }
 
 template <class T>
 void Queue<T>::iterate(void (*func)(T element)) {
 	Queue_Iterator<T> it = getFrontIterator();
-	Queue_Iterator<T> end = getBackIterator();
 	it--;
 	while ((*it).prevNode != nullptr) {
 		func((*it).getElement());

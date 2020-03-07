@@ -41,14 +41,20 @@ void Plane::setName(string name) {
 	destiny = name.substr(5, 3);
 }
 
+string Plane::getName() {
+	string name = "";
+	name += company;
+	name += to_string(planeNumber);
+	name += destiny;
+	return name;
+}
+
 void Plane::update() {
 	timeWaiting++;
 
 	if (flying) {
-		if (fuel > 0)
-			fuel--;
-		else
-			VIP = true;
+		if (fuel < avgTimeToLeaveQueue) VIP = true;
+		fuel--;
 	} else if (timeWaiting > 0.1 * flyTime)
 		VIP = true;
 
@@ -89,8 +95,8 @@ bool Plane::operator>=(Plane &p) {
 
 // Overload no operador << para poder imprimir um avião usando cout
 ostream &operator<<(ostream &os, Plane &p) {
-	os << "Avião " << p.company << p.planeNumber << p.destiny << ":" 
-		<< (p.isVIP() ? "\t VIP" : " ") << endl;
+	os << "Avião " << p.company << p.planeNumber << p.destiny << ":"
+	   << (p.isVIP() ? "\t VIP" : " ") << endl;
 	os << "\tEsperando por " << p.timeWaiting << " unidades de tempo" << endl;
 	os << "\tTempo estimado para sair da fila " << p.avgTimeToLeaveQueue
 	   << " unidades de tempo" << endl;
