@@ -26,7 +26,7 @@ class Airport {
 
 	// Iterador que aponta para o último VIP em cada fila
 	// Se não há VIPs, aponta para o começo da fila (front)
-	// Queue_Iterator<Plane *> lastVIP[3];
+	Queue_Iterator<Plane *> lastVIP[3];
 
 	// Nos arrays a baixo, cada índice se refere a uma fila
 	int totalTimeToDeparture[3];    // Soma de tempos estimados para decolagem
@@ -34,9 +34,8 @@ class Airport {
 	int totalVIP[3];                // Número de VIPs por pista
 	int totalFuelOnPlanesToLand[3]; // Combustíveis nos aviões que estão
 	                                // esperando (por pista)
-	int VIPWaitingTime[3];          // Retorna o tempo que um avião VIP terá
-	                                // que esperar caso seja colocado na fila i
 	int totalFuelOnPlanesThatLanded; // Soma dos combustíveis nos aviões que pousaram
+	int totalLendedPlanes;           // Total de aviões pousados
 
 	int cur_time; // Tempo atual da simulação
 	int tot_time; // Total de tempo da simulação
@@ -47,20 +46,22 @@ class Airport {
 	void addVIP(Plane *p);    // Adiciona um avião que é VIP
 
   public:
-	Queue_Iterator<Plane *> lastVIP[3];
-
 	Airport(int t_tot_time, int t_k);
 	void addPlane(Plane *p);       // Adiciona um avião na fila
 	void removePlane(int t_index); // Remove um avião da fila t_index
 	                               // se a pista t_index está disponível
-	void showRegisters();
-	void showWaitingPlanes();
-	void showAllExpectedTimes();
-	void showAvgTimeToDeparture();
-	void showAvgTimeToLand();
-	void showAvgFuelOnPlanesWaitingToLand();
-	void showAvgFuelOnPlanesThatLanded();
-	void showQntOfVeryImportantPlanes();
+	void showRegisters();          // Mostra todas as informações dos
+	                               // aviões que já pousaram
+	void showWaitingPlanes();      // Mostra as filas
+	void showAllExpectedTimes();   // Imprime todos os tempos esperados para pousar
+	void showAvgTimeToDeparture(); // Mostra a média de todos os tempos para decorar
+	void showAvgTimeToLand();      // Mostra a média dos tempos para pousar
+	void showAvgFuelOnPlanesWaitingToLand(); // Mostra a média do combustível nos
+	                                         // aviões esperando para pousar
+	void showAvgFuelOnPlanesThatLanded();    // Mostra a média do combustível
+	                                         // nos aviões que já pousaram
+	void showQntOfVeryImportantPlanes();     // Mostra quantos VIPs há
+	                                         // esperando para pousar
 	void update(); // Método que deve ser chamado a cada unidade de tempo passada
 };
 

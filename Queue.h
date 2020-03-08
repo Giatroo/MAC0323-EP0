@@ -5,6 +5,7 @@
 
 #include "MyException.h"
 
+#include <functional>
 #include <iostream>
 
 // Classe de tipo genérica para um nó de uma lista ligada.
@@ -85,7 +86,7 @@ class Queue {
 
 	// Esse método itera sobre todos os elementos da fila aplicando a função
 	// func sobre eles
-	void iterate(void (*func)(T element));
+	void iterate(const std::function<void(T)> &func);
 
 	// Método que remove um elemento da fila apontado por um iterador
 	T removeFrom(Queue_Iterator<T> &it);
@@ -384,7 +385,7 @@ void Queue<T>::addIn(Queue_Iterator<T> *it, T e) {
 }
 
 template <class T>
-void Queue<T>::iterate(void (*func)(T element)) {
+void Queue<T>::iterate(const std::function<void(T)> &func) {
 	Queue_Iterator<T> it = getFrontIterator();
 	it--;
 	while ((*it).prevNode != nullptr) {

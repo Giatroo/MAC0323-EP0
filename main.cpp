@@ -1,4 +1,6 @@
+#include <functional>
 #include <iostream>
+
 #include "AirCompany.h"
 #include "Airport.h"
 #include "Destination.h"
@@ -8,7 +10,15 @@
 
 using namespace std;
 
+class Option {
+	string name;
+	function<void()> func;
+};
+
+// Esse método é chamado para inicializar a nosso programa
 void init() {
+	srand(/*time(0)*/ 5); // 3 está dando segfault
+
 	try {
 		initDestinations();
 		initAirCompanies();
@@ -20,39 +30,15 @@ void init() {
 }
 
 int main() {
-	srand(/*time(0)*/ 5); // 3 está dando segfault
+	int k, t;
 	init();
 
-	Airport airport(100, 5);
-
-	for (int i = 0; i < 5; i++) { airport.update(); }
-
-	/*airport.addPlane(createRandomPlane());
-	airport.addPlane(createRandomPlane());
-	airport.addPlane(createRandomPlane());
-	airport.showWaitingPlanes();
-	airport.addPlane(createRandomPlane());
-	airport.showWaitingPlanes();
-	airport.addPlane(createRandomPlane());
-	airport.showWaitingPlanes();
-	airport.addPlane(createRandomPlane());
-	airport.showWaitingPlanes();*/
-
-	/*Pointer_Queue<Plane *> q;
-	q.enqueue(createRandomPlane());
-	q.enqueue(createRandomPlane());
-	q.enqueue(createRandomPlane());
-	q.PrintQueue();
-
-	auto it = q.getFrontIterator();
-	it--;
-	auto jt = it;
-	cout << (*it).getElement()->getName() << endl;
-	cout << (*jt).getElement()->getName() << endl;
-	it--;
-	cout << endl;
-	cout << (*it).getElement()->getName() << endl;
-	cout << (*jt).getElement()->getName() << endl;*/
+	cout << "Bem-vindo ao simulador de torre de aeroporto:\n";
+	cout << "Por favor, digite o máximo de aviões por tempo: ";
+	cin >> k;
+	cout << "Por favor, digite por quanto tempo você quer que a simulação dure: ";
+	cin >> t;
+	Airport airport(t, k);
 
 	return 0;
 }

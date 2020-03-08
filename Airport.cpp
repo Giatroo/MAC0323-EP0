@@ -4,10 +4,13 @@
 #include "Plane.h"
 
 Airport::Airport(int t_tot_time, int t_k)
-    : cur_time(0), tot_time(t_tot_time), k(t_k), totalFuelOnPlanesThatLanded(0) {
+    : cur_time(0),
+      tot_time(t_tot_time),
+      k(t_k),
+      totalFuelOnPlanesThatLanded(0),
+      totalLendedPlanes(0) {
 	for (int i = 0; i < 3; i++) {
 		timeToBeFree[i] = 0;
-		VIPWaitingTime[i] = 0;
 		totalTimeToDeparture[i] = 0;
 		totalTimeToLand[i] = 0;
 		totalVIP[i] = 0;
@@ -56,10 +59,10 @@ void Airport::addNonVIP(Plane *p) {
 	p->setAvgTimeToLeaveQueue(minWaitingTime);
 
 	if (p->isFlying()) {
-		totalTimeToLand[insertQueue] += 2;
+		totalTimeToLand[insertQueue] += minWaitingTime;
 		totalFuelOnPlanesToLand[insertQueue] += p->getFuel();
 	} else {
-		totalTimeToDeparture[insertQueue] += 2;
+		totalTimeToDeparture[insertQueue] += minWaitingTime;
 	}
 	queue[insertQueue].enqueue(p);
 }
@@ -202,6 +205,7 @@ void Airport::removePlane(int t_index) {
 	}
 
 	if (p->isVIP()) { totalVIP[t_index]--; }
+	totalLendedPlanes++;
 
 	// Tiramos o avião da fila
 	queue[t_index].dequeue();
@@ -231,6 +235,9 @@ void Airport::update() {
 			this->addPlane(createRandomPlane());
 			this->showWaitingPlanes();
 		}
+		showAvgTimeToDeparture();
+		char c;
+		std::cin >> c;
 		// Mandamos remover aviões de todas as filas
 		// A função remove que se vira com se é possível ou não remover o avião
 		// do começo da fila i (devido o tempo de espera das pistas)
@@ -238,6 +245,8 @@ void Airport::update() {
 			removePlane(i);
 			this->showWaitingPlanes();
 		}
+		showAvgTimeToDeparture();
+		std::cin >> c;
 	} catch (MyException e) {
 		e.what();
 		exit(-1);
@@ -250,7 +259,15 @@ void Airport::update() {
 		if (timeToBeFree[i] != 0) timeToBeFree[i]--;
 
 	// Agora passamos por todos os aviões em fila atualizando-os
-	for (int i = 0; i < 3; i++) queue[i].iterate([](Plane *p) { p->update(); });
+	for (int i = 0; i < 3; i++)
+		queue[i].iterate([&](Plane *p) {
+			p->update();
+			if (p->isFlying()) {
+				this->totalFuelOnPlanesToLand[i]--;
+				this->totalTimeToLand[i]--;
+			} else
+				this->totalTimeToDeparture[i]--;
+		});
 
 	// E, por fim, precisamos atualizar a fila em si
 	// Se algum avião que estava sobrevoando o aeroporto se tornou emergencial, então
@@ -304,3 +321,109 @@ void Airport::showWaitingPlanes() {
 	system("less temp.txt");
 	system("rm temp.txt");
 }
+
+void Airport::showAllExpectedTimes() {
+	system("clear");
+	std::cout << "Tempos de espera:\n\n";
+	for (int i = 0; i < 3; i++) {
+		std::cout << "Fila da pista " << i + 1 << ":\n";
+		queue[i].iterate([](Plane *p) {
+			std::cout << p->getName() << " esperará por "
+			          << p->getAvgTimeToLeaveQueue() << std::endl;
+		});
+		std::cout << std::endl;
+	}
+}
+
+void Airport::showAvgTimeToDeparture() {
+	double totalTime, totalPlanes;
+	totalTime = totalPlanes = 0;
+
+	system("clear");
+
+	std::cout << "Tempo médio para decolagem:\n" << std::endl;
+
+	for (int i = 0; i < 3; i++) {
+		std::cout << "Fila " << i + 1 << ": ";
+
+		totalTime += ((double)totalTimeToDeparture[i]);
+		totalPlanes = queue[i].size();
+
+		if (queue[i].empty())
+			std::cout << 0;
+		else
+			std::cout << ((double)totalTimeToDeparture[i]) / queue[i].size();
+		std::cout << std::endl;
+	}
+
+	std::cout << "Total: " << (totalPlanes == 0 ? 0 : (totalTime / totalPlanes))
+	          << std::endl;
+}
+
+void Airport::showAvgTimeToLand() {
+	double totalTime, totalPlanes;
+	totalTime = totalPlanes = 0;
+
+	system("clear");
+
+	std::cout << "Tempo médio para pouso:\n" << std::endl;
+
+	for (int i = 0; i < 3; i++) {
+		std::cout << "Fila " << i + 1 << ": ";
+
+		totalTime += ((double)totalTimeToLand[i]);
+		totalPlanes = queue[i].size();
+
+		if (queue[i].empty())
+			std::cout << 0;
+		else
+			std::cout << ((double)totalTimeToLand[i]) / queue[i].size();
+		std::cout << std::endl;
+	}
+
+	std::cout << "Total: " << (totalPlanes == 0 ? 0 : (totalTime / totalPlanes))
+	          << std::endl;
+}
+
+void Airport::showAvgFuelOnPlanesWaitingToLand() {
+	double totalFuel, totalPlanes;
+	totalFuel = totalPlanes = 0;
+
+	system("clear");
+
+	std::cout << "Média de combustível nos aviões esperando:\n" << std::endl;
+
+	for (int i = 0; i < 3; i++) {
+		std::cout << "Fila " << i + 1 << ": ";
+
+		totalFuel += ((double)totalFuelOnPlanesToLand[i]);
+		totalPlanes = queue[i].size();
+
+		if (queue[i].empty())
+			std::cout << 0;
+		else
+			std::cout << ((double)totalFuelOnPlanesToLand[i]) / queue[i].size();
+		std::cout << std::endl;
+	}
+
+	std::cout << "Total: " << (totalPlanes == 0 ? 0 : (totalFuel / totalPlanes))
+	          << std::endl;
+}
+
+void Airport::showAvgFuelOnPlanesThatLanded() {
+	system("clear");
+
+	std::cout << "Média de combustível nos aviões pousados: "
+	          << (totalLendedPlanes == 0 ?
+	                  0 :
+	                  ((double)totalFuelOnPlanesThatLanded) / totalLendedPlanes)
+	          << std::endl;
+}
+
+void Airport::showQntOfVeryImportantPlanes() {
+	system("clear");
+
+	std::cout << "Quantidade de emergências nas filas: " << totalVIP << std::endl;
+}
+
+void Airport::showRegisters() {}

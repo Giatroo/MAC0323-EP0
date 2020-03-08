@@ -27,7 +27,10 @@ Plane::Plane(AirCompany airCompany, bool VIP, bool flying, int fuel)
 	int destinationNum = rand() % airCompany.getNumDestinations();
 
 	name += airCompany.getName();
-	name += to_string(rand() % 1000);
+	int x = rand() % 1000;
+	if (x / 100 == 0) name += '0';
+	if (x / 10 == 0) name += '0';
+	name += to_string(x);
 	name += airCompany.getDestination(destinationNum)->getName();
 	setName(name);
 
@@ -44,6 +47,8 @@ void Plane::setName(string name) {
 string Plane::getName() {
 	string name = "";
 	name += company;
+	if (planeNumber / 100 == 0) name += '0';
+	if (planeNumber / 10 == 0) name += '0';
 	name += to_string(planeNumber);
 	name += destiny;
 	return name;
@@ -95,8 +100,7 @@ bool Plane::operator>=(Plane &p) {
 
 // Overload no operador << para poder imprimir um avião usando cout
 ostream &operator<<(ostream &os, Plane &p) {
-	os << "Avião " << p.company << p.planeNumber << p.destiny << ":"
-	   << (p.isVIP() ? "\t VIP" : " ") << endl;
+	os << "Avião " << p.getName() << ":" << (p.isVIP() ? "\t VIP" : " ") << endl;
 	os << "\tEsperando por " << p.timeWaiting << " unidades de tempo" << endl;
 	os << "\tTempo estimado para sair da fila " << p.avgTimeToLeaveQueue
 	   << " unidades de tempo" << endl;
