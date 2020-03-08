@@ -34,13 +34,13 @@ void Airport::addNonVIP(Plane *p) {
 
 	for (int i = 0; i < totQueues; i++) {
 		if (!queue[i].empty()) {
-			if (minWaitingTime > queue[i].getBack()->getAvgTimeToLeaveQueue()) {
+			if (minWaitingTime > queue[i].getBack()->getAvgTimeToLeaveQueue() + 2) {
 				minWaitingTime = queue[i].getBack()->getAvgTimeToLeaveQueue() + 2;
 				// +2 por causa do tempo de serviço
 				insertQueue = i;
 			}
 		} else {
-			minWaitingTime = cur_time + timeToBeFree[i];
+			minWaitingTime = timeToBeFree[i];
 			insertQueue = i;
 		}
 	}
@@ -67,37 +67,75 @@ void Airport::addNonVIP(Plane *p) {
 void Airport::addVIP(Plane *p) {
 	int minWaitingTime = INT32_MAX; // O tempo mínimo de espera desse VIP
 	int insertionQueue = 0;         // A fila em que vou inserir o VIP
+	// Se dois lugares na fila são igualmente bons, então o desempate é feito
+	// pelo menos tempo de espera do último avião na fila (assim atrapalhamos menos
+	// aviões que já estão esperando)
+	int minTroubleTime = INT32_MAX;
 
 	// Escolhemos a fila onde o VIP demorará menos tempo para pousar
 	for (int i = 0; i < 3; i++) {
+		// Se a fila está sem nenhum VIP
 		if (lastVIP[i] == queue[i].getFrontIterator()) {
+			// Se o tempo para a pista ficar livre é menor que o menor tempo até agr
 			if (minWaitingTime > timeToBeFree[i]) {
 				minWaitingTime = timeToBeFree[i];
 				insertionQueue = i;
+
+				minTroubleTime =
+				    (queue[i].empty()) ?
+				        0 :
+				        queue[i].getBack()->getAvgTimeToLeaveQueue() + 2;
+			} else if (minWaitingTime == timeToBeFree[i]) {
+				// Se o menor tempo até agr é igual ao da fila ficar livre (empate)
+				int thisTroubleTime =
+				    (queue[i].empty()) ?
+				        0 :
+				        queue[i].getBack()->getAvgTimeToLeaveQueue() + 2;
+				// Desempatamos pelo menor tempo do último avião da fila
+				if (thisTroubleTime <= minTroubleTime) {
+					insertionQueue = i;
+					minTroubleTime = thisTroubleTime;
+				}
 			}
-		} else {
+
+		} else { // Se a fila já possui algo VIP
+			// Se o menor tempo é maior que o do último avião (mais 2)
 			if (minWaitingTime >
 			    (*lastVIP[i]).getElement()->getAvgTimeToLeaveQueue() + 2) {
 				minWaitingTime =
 				    (*lastVIP[i]).getElement()->getAvgTimeToLeaveQueue() + 2;
 				insertionQueue = i;
+
+				// Não precisamos ver se a fila está vazia, pois sabemos que há pelo
+				// menos um VIP nela
+				minTroubleTime = queue[i].getBack()->getAvgTimeToLeaveQueue() + 2;
+			} else if (minWaitingTime ==
+			           (*lastVIP[i]).getElement()->getAvgTimeToLeaveQueue() + 2) {
+				// Se rolou empate
+				int thisTroubleTime =
+				    queue[i].getBack()->getAvgTimeToLeaveQueue() + 2;
+				// Desempatamos pelo menor tempo do último avião da fila
+				if (thisTroubleTime <= minTroubleTime) {
+					insertionQueue = i;
+					minTroubleTime = thisTroubleTime;
+				}
 			}
 		}
 	}
 
-	/*std::cout << "Fila escolhida " << insertionQueue << "\n";
-	std::cout << "minWaitingTime " << minWaitingTime << "\n";
-	if (lastVIP[insertionQueue] != queue[insertionQueue].getFrontIterator()) {
-	    std::cout
-	        << "tempo do da frente "
-	        << (*lastVIP[insertionQueue]).getElement()->getAvgTimeToLeaveQueue()
-	        << "\n";
-	    std::cout << "O da frente é "
-	              << (*lastVIP[insertionQueue]).getElement()->getName() << " \n";
-	}
-	std::cout << "tempo to be free " << timeToBeFree[insertionQueue] << "\n";
-	char c;
-	std::cin >> c;*/
+	// std::cout << "\nFila escolhida " << insertionQueue << "\n";
+	// std::cout << "minWaitingTime " << minWaitingTime << "\n";
+	// if (lastVIP[insertionQueue] != queue[insertionQueue].getFrontIterator()) {
+	// 	std::cout
+	// 	    << "tempo do da frente "
+	// 	    << (*lastVIP[insertionQueue]).getElement()->getAvgTimeToLeaveQueue()
+	// 	    << "\n";
+	// 	std::cout << "O da frente é "
+	// 	          << (*lastVIP[insertionQueue]).getElement()->getName() << " \n";
+	// }
+	// std::cout << "tempo to be free " << timeToBeFree[insertionQueue] << "\n";
+	// char c;
+	// std::cin >> c;
 
 	// Se ele está tentando pousar e não tem combustível para esperar
 	if (p->isFlying() && p->getFuel() < minWaitingTime) {

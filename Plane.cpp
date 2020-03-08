@@ -57,7 +57,7 @@ void Plane::update() {
 		fuel--;
 	} else if (timeWaiting > 0.1 * flyTime)
 		VIP = true;
-
+	avgTimeToLeaveQueue--;
 	updatePriority();
 }
 

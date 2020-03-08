@@ -9,7 +9,7 @@
 #define EMERGENCY -1
 
 // Qual a chance de um avião ser uma emergência em %
-#define EMERGENCY_RATE 100
+#define EMERGENCY_RATE 10
 
 // Máximo de combustível que um avião pode ter
 #define MAX_FUEL 1000
