@@ -50,8 +50,6 @@ class Airport {
 	void addPlane(Plane *p);       // Adiciona um avião na fila
 	void removePlane(int t_index); // Remove um avião da fila t_index
 	                               // se a pista t_index está disponível
-	void showRegisters();          // Mostra todas as informações dos
-	                               // aviões que já pousaram
 	void showWaitingPlanes();      // Mostra as filas
 	void showAllExpectedTimes();   // Imprime todos os tempos esperados para pousar
 	void showAvgTimeToDeparture(); // Mostra a média de todos os tempos para decorar
@@ -63,6 +61,9 @@ class Airport {
 	void showQntOfVeryImportantPlanes();     // Mostra quantos VIPs há
 	                                         // esperando para pousar
 	void update(); // Método que deve ser chamado a cada unidade de tempo passada
+
+	bool simulating(); // Retorna se a simulação deve continuar ou não
+	                   // (se cur_time < tot_time)
 };
 
 #endif
