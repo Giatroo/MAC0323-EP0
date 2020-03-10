@@ -24,13 +24,14 @@ void init() {
 	}
 }
 
-int readInput() {
+int readInput(Airport airport) {
 	int input = INT32_MAX;
 	const int size = 8;
 
 	while (input < 0 || input > size) {
 		system("clear");
 		if (input != INT32_MAX) cout << "Deve ser um número válido\n\n";
+		cout << "Tempo atual: " << airport.getCurTime() << endl;
 		cout << "0 - Sair\n";
 		cout << "1 - Mostrar todas as filas\n";
 		cout << "2 - Mostrar tempo médio para sair das filas\n";
@@ -39,7 +40,10 @@ int readInput() {
 		cout << "5 - Mostrar tempo médio para pouso\n";
 		cout << "6 - Mostrar tempo médio para decolagem\n";
 		cout << "7 - Mostrar quantidade de emergências nas filas\n";
-		cout << "8 - Atualizar o aeroporto\n";
+		if (airport.simulating())
+			cout << "8 - Atualizar o aeroporto\n";
+		else
+			cout << "8 - Finalizar a simulação\n";
 		cout << "Escolha uma opção: ";
 		cin >> input;
 	}
@@ -59,7 +63,7 @@ int main() {
 
 	Airport airport(t, k); // O aeroporto
 
-	int userOption = readInput();
+	int userOption = readInput(airport);
 	while (airport.simulating() && userOption != 0) {
 		switch (userOption) {
 			case 0:
@@ -78,7 +82,7 @@ int main() {
 			default: break;
 		}
 
-		userOption = readInput();
+		userOption = readInput(airport);
 	}
 
 	return 0;

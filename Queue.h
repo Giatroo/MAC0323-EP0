@@ -361,11 +361,18 @@ Queue_Iterator<T> Queue<T>::getBackIterator() {
 
 template <class T>
 T Queue<T>::removeFrom(Queue_Iterator<T> &it) {
+	std::cout << "1\n";
 	QueueNode<T> n = *it;
+	std::cout << "2\n";
+	std::cout << "n.prevNode " << n.prevNode << std::endl;
 	n.prevNode->nextNode = n.nextNode;
+	std::cout << "3\n";
 	n.nextNode->prevNode = n.prevNode;
+	std::cout << "4\n";
 	T e = n.getElement();
+	std::cout << "5\n";
 	numNodes--;
+	std::cout << "6\n";
 	return e;
 }
 

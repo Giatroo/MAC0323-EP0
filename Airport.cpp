@@ -207,6 +207,8 @@ void Airport::update() {
 
 	int cur_k = rand() % (this->k + 1); // Como é até k, fazemos (mod k+1)
 
+	std::cout << "Começo do update" << std::endl;
+
 	try {
 		// A função add que se vira em como adicionar esses aviões na fila
 		// Ela também tem a posibilidade de rejeitar um avião (mandá-lo embora)
@@ -221,6 +223,8 @@ void Airport::update() {
 	}
 	// Uma unidade de tempo passada
 	cur_time++;
+
+	std::cout << "Dps do cur_time++" << std::endl;
 
 	// Se a pista i está em serviço, se passou uma unidade de tempo de serviço
 	for (int i = 0; i < 3; i++)
@@ -237,6 +241,12 @@ void Airport::update() {
 				this->totalTimeToDeparture[i]--;
 		});
 
+	std::cout << "Dps de iterar" << std::endl;
+
+	int a = 1;
+
+	this->showWaitingPlanes();
+
 	// E, por fim, precisamos atualizar a fila em si
 	// Se algum avião que estava sobrevoando o aeroporto se tornou emergencial, então
 	// nós mandamos ele para outro aeroporto
@@ -245,11 +255,17 @@ void Airport::update() {
 	// para a fila que vai fazê-lo sair o mais rápido possível)
 	for (int i = 0; i < 3; i++) {
 		Queue_Iterator<Plane *> it = lastVIP[i];
+		std::cout << "lastVIP " << *(*it).getElement() << std::endl;
 		it--;
+		std::cout << *(*it).getElement() << std::endl;
+		std::cout << "bool " << (it != queue[i].getBackIterator()) << std::endl;
 		while (it != queue[i].getBackIterator()) {
+			std::cout << a++ << std::endl;
 			if ((*it).getElement()->isFlying() && (*it).getElement()->isVIP()) {
+				std::cout << "cima\n";
 				Plane *p = queue[i].removeFrom(it); // Removemos da fila
-				delete p;                           // E mandamos embora
+				std::cout << "removido\n";
+				delete p; // E mandamos embora
 			} else if (!(*it).getElement()->isFlying() &&
 			           (*it).getElement()->isVIP()) {
 				Plane *p = queue[i].removeFrom(it); // Removemos da fila
@@ -258,6 +274,8 @@ void Airport::update() {
 			it--;
 		}
 	}
+
+	std::cout << "Fim do update" << std::endl;
 }
 
 void Airport::showWaitingPlanes() {
@@ -384,3 +402,5 @@ void Airport::showQntOfVeryImportantPlanes() {
 }
 
 bool Airport::simulating() { return cur_time < tot_time; }
+
+int Airport::getCurTime() { return cur_time; }

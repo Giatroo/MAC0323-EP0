@@ -64,6 +64,8 @@ class Airport {
 
 	bool simulating(); // Retorna se a simulação deve continuar ou não
 	                   // (se cur_time < tot_time)
+
+	int getCurTime(); // Retorna o tempo atual da simulação
 };
 
 #endif
