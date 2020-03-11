@@ -21,8 +21,8 @@
  */
 class Airport {
   private:
-	Pointer_Queue<Plane *> queue[3]; // As filas para cada pista
-	int timeToBeFree[3];             // Tempo até que a i-ésima pista fique livre
+	// Pointer_Queue<Plane *> queue[3]; // As filas para cada pista
+	int timeToBeFree[3]; // Tempo até que a i-ésima pista fique livre
 
 	// Iterador que aponta para o último VIP em cada fila
 	// Se não há VIPs, aponta para o começo da fila (front)
@@ -46,6 +46,7 @@ class Airport {
 	void addVIP(Plane *p);    // Adiciona um avião que é VIP
 
   public:
+	Pointer_Queue<Plane *> queue[3]; // As filas para cada pista
 	Airport(int t_tot_time, int t_k);
 	void addPlane(Plane *p);       // Adiciona um avião na fila
 	void removePlane(int t_index); // Remove um avião da fila t_index

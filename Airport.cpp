@@ -20,6 +20,7 @@ Airport::Airport(int t_tot_time, int t_k)
 }
 
 void Airport::addPlane(Plane *p) {
+	std::cout << "Adicionando o avião " << *p << std::endl;
 	if (p->isVIP())
 		addVIP(p);
 	else
@@ -75,6 +76,15 @@ void Airport::addVIP(Plane *p) {
 	// aviões que já estão esperando)
 	int minTroubleTime = INT32_MAX;
 
+	std::cout << "Endereço do aviao\n" << p << std::endl;
+
+	auto it = queue[0].getFrontIterator();
+	std::cout << "Começo do add\n";
+	std::cout << it.curNode << std::endl
+	          << (*it).prevNode << std::endl
+	          << (*it).nextNode << std::endl
+	          << std::endl;
+
 	// Escolhemos a fila onde o VIP demorará menos tempo para pousar
 	for (int i = 0; i < 3; i++) {
 		// Se a fila está sem nenhum VIP
@@ -126,6 +136,13 @@ void Airport::addVIP(Plane *p) {
 		}
 	}
 
+	it = queue[0].getFrontIterator();
+	std::cout << "Dps de achar a fila\n";
+	std::cout << it.curNode << std::endl
+	          << (*it).prevNode << std::endl
+	          << (*it).nextNode << std::endl
+	          << std::endl;
+
 	// Se ele está tentando pousar e não tem combustível para esperar
 	if (p->isFlying() && p->getFuel() < minWaitingTime) {
 		std::cout << "Descardando avião\n";
@@ -134,6 +151,7 @@ void Airport::addVIP(Plane *p) {
 	}
 
 	// Agora vemos as estatísticas
+	std::cout << "Adicionando a fila " << insertionQueue << std::endl;
 	p->setAvgTimeToLeaveQueue(minWaitingTime);
 	totalVIP[insertionQueue]++;
 
@@ -144,13 +162,61 @@ void Airport::addVIP(Plane *p) {
 		totalTimeToDeparture[insertionQueue] += 2;
 	}
 
+	it = queue[0].getFrontIterator();
+	std::cout << "Antes de adicionar o avião na fila\n";
+	std::cout << (*it.curNode).getElement()->getName() << std::endl
+	          << (*it).prevNode << std::endl
+	          << (*it).nextNode << std::endl
+	          << std::endl;
+
 	// Adicionamos ele na fila
 	Queue_Iterator<Plane *> insertionPoint = lastVIP[insertionQueue];
+
+	std::cout << "lastVIP na fila " << insertionQueue << std::endl;
+	std::cout << insertionPoint.curNode << std::endl
+	          << (*insertionPoint).prevNode << std::endl
+	          << (*insertionPoint).nextNode << std::endl
+	          << std::endl;
+
 	insertionPoint--; // Decrementamos pois addIn vai adicionar na fente de
 	                  // insertionPoint
+
+	std::cout << "Após decrementá-lo " << insertionQueue << std::endl;
+	std::cout << insertionPoint.curNode << std::endl
+	          << (*insertionPoint).prevNode << std::endl
+	          << (*insertionPoint).nextNode << std::endl
+	          << std::endl;
+
+	std::cout << "Endereço do aviao\n" << p << std::endl;
 	queue[insertionQueue].addIn(&insertionPoint, p);
+
+	std::cout << "Apos adicionar " << std::endl;
+	std::cout << insertionPoint.curNode << std::endl
+	          << (*insertionPoint).prevNode << std::endl
+	          << (*insertionPoint).nextNode << std::endl
+	          << std::endl;
+
+	std::cout << "lastVIP agora " << std::endl;
+	std::cout << lastVIP[insertionQueue].curNode << std::endl
+	          << (*lastVIP[insertionQueue]).prevNode << std::endl
+	          << (*lastVIP[insertionQueue]).nextNode << std::endl
+	          << std::endl;
+
 	lastVIP[insertionQueue]--; // Decrementamos o ponteiro do último VIP, pois
+
+	std::cout << "lastVIP decrementado (correto) " << std::endl;
+	std::cout << lastVIP[insertionQueue].curNode << std::endl
+	          << (*lastVIP[insertionQueue]).prevNode << std::endl
+	          << (*lastVIP[insertionQueue]).nextNode << std::endl
+	          << std::endl;
 	// há mais um VIP adicionado
+
+	it = queue[0].getFrontIterator();
+	std::cout << "Depois de adicionar o avião na fila\n";
+	std::cout << it.curNode << std::endl
+	          << (*it).prevNode << std::endl
+	          << (*it).nextNode << std::endl
+	          << std::endl;
 
 	// Agora precisamos atualizar o tempo médio de espera de todos os aviões
 	// atrás do VIP inserido
@@ -193,8 +259,9 @@ void Airport::removePlane(int t_index) {
 
 	auto it = queue[t_index].getFrontIterator();
 	it--;
-	if (queue[t_index].empty() || !(*it).getElement()->isVIP())
-		lastVIP[t_index] = queue[t_index].getFrontIterator();
+	if (queue[t_index].empty() || !(*it).getElement()->isVIP()) {
+		lastVIP[t_index].curNode = queue[t_index].getFrontIterator().curNode;
+	}
 }
 
 void Airport::update() {
@@ -208,23 +275,45 @@ void Airport::update() {
 	int cur_k = rand() % (this->k + 1); // Como é até k, fazemos (mod k+1)
 
 	std::cout << "Começo do update" << std::endl;
+	auto it = queue[0].getFrontIterator();
+	std::cout << it.curNode << std::endl
+	          << (*it).prevNode << std::endl
+	          << (*it).nextNode << std::endl
+	          << std::endl;
 
 	try {
 		// A função add que se vira em como adicionar esses aviões na fila
 		// Ela também tem a posibilidade de rejeitar um avião (mandá-lo embora)
 		for (int i = 0; i < cur_k; i++) { this->addPlane(createRandomPlane()); }
+
+		showWaitingPlanes();
+
+		std::cout << "Dps de adicionar" << std::endl;
+		it = queue[0].getFrontIterator();
+		std::cout << it.curNode << std::endl
+		          << (*it).prevNode << std::endl
+		          << (*it).nextNode << std::endl
+		          << std::endl;
+
 		// Mandamos remover aviões de todas as filas
 		// A função remove que se vira com se é possível ou não remover o avião
 		// do começo da fila i (devido o tempo de espera das pistas)
 		for (int i = 0; i < 3; i++) { this->removePlane(i); }
+
+		std::cout << "Dps de remover" << std::endl;
+		it = queue[0].getFrontIterator();
+		std::cout << it.curNode << std::endl
+		          << (*it).prevNode << std::endl
+		          << (*it).nextNode << std::endl
+		          << std::endl;
+
+		showWaitingPlanes();
 	} catch (MyException e) {
 		e.what();
 		exit(-1);
 	}
 	// Uma unidade de tempo passada
 	cur_time++;
-
-	std::cout << "Dps do cur_time++" << std::endl;
 
 	// Se a pista i está em serviço, se passou uma unidade de tempo de serviço
 	for (int i = 0; i < 3; i++)
@@ -241,8 +330,6 @@ void Airport::update() {
 				this->totalTimeToDeparture[i]--;
 		});
 
-	std::cout << "Dps de iterar" << std::endl;
-
 	int a = 1;
 
 	this->showWaitingPlanes();
@@ -255,17 +342,11 @@ void Airport::update() {
 	// para a fila que vai fazê-lo sair o mais rápido possível)
 	for (int i = 0; i < 3; i++) {
 		Queue_Iterator<Plane *> it = lastVIP[i];
-		std::cout << "lastVIP " << *(*it).getElement() << std::endl;
 		it--;
-		std::cout << *(*it).getElement() << std::endl;
-		std::cout << "bool " << (it != queue[i].getBackIterator()) << std::endl;
 		while (it != queue[i].getBackIterator()) {
-			std::cout << a++ << std::endl;
 			if ((*it).getElement()->isFlying() && (*it).getElement()->isVIP()) {
-				std::cout << "cima\n";
 				Plane *p = queue[i].removeFrom(it); // Removemos da fila
-				std::cout << "removido\n";
-				delete p; // E mandamos embora
+				delete p;                           // E mandamos embora
 			} else if (!(*it).getElement()->isFlying() &&
 			           (*it).getElement()->isVIP()) {
 				Plane *p = queue[i].removeFrom(it); // Removemos da fila
@@ -274,8 +355,6 @@ void Airport::update() {
 			it--;
 		}
 	}
-
-	std::cout << "Fim do update" << std::endl;
 }
 
 void Airport::showWaitingPlanes() {

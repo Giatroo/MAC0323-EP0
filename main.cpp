@@ -62,6 +62,15 @@ int main() {
 	cin >> t;
 
 	Airport airport(t, k); // O aeroporto
+	auto it = airport.queue[0].getFrontIterator();
+	std::cout << it.curNode << std::endl
+	          << (*it).prevNode << std::endl
+	          << (*it).nextNode << std::endl;
+
+	it = airport.queue[0].getBackIterator();
+	std::cout << it.curNode << std::endl
+	          << (*it).prevNode << std::endl
+	          << (*it).nextNode << std::endl;
 
 	int userOption = readInput(airport);
 	while (airport.simulating() && userOption != 0) {
@@ -78,9 +87,11 @@ int main() {
 			case 5: airport.showAvgTimeToLand(); break;
 			case 6: airport.showAvgTimeToDeparture(); break;
 			case 7: airport.showQntOfVeryImportantPlanes(); break;
-			case 8: airport.update();
+			case 8: airport.update(); break;
+
 			default: break;
 		}
+		it = airport.queue[0].getBackIterator();
 
 		userOption = readInput(airport);
 	}
