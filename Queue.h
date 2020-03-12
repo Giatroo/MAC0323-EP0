@@ -115,7 +115,7 @@ template <class T>
 class Queue_Iterator {
   private:
 	// Um apontador para o elemento que o iterador está atualmente
-	QueueNode<T> *curNode;
+	// QueueNode<T> *curNode;
 
 	// Essa linha faz com que a classe Queue possa ter acesso à variável curNode
 	// (o contrário não é verdade, essa classe não tem acesso aos
@@ -123,6 +123,8 @@ class Queue_Iterator {
 	friend class Queue<T>;
 
   public:
+	QueueNode<T> *curNode;
+
 	// O operador * deve retornar *curNode para o usuário
 	QueueNode<T> operator*();
 

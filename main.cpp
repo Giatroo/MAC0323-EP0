@@ -64,6 +64,10 @@ int main() {
 	cin >> t;
 
 	Airport airport(t, k); // O aeroporto
+	auto it = airport.queue[0].getFrontIterator();
+	std::cout << it.curNode << std::endl
+	          << (*it).prevNode << std::endl
+	          << (*it).nextNode << std::endl;
 
 	int userOption = readInput(false);
 	while (airport.simulating() && userOption != 0) {
@@ -104,6 +108,7 @@ int main() {
 			case 7: airport.showQntOfVeryImportantPlanes(); break;
 			default: break;
 		}
+		it = airport.queue[0].getBackIterator();
 
 		userOption = readInput(true);
 	}
