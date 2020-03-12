@@ -138,10 +138,10 @@ void Airport::addVIP(Plane *p) {
 	totalVIP[insertionQueue]++;
 
 	if (p->isFlying()) {
-		totalTimeToLand[insertionQueue] += 2;
+		totalTimeToLand[insertionQueue] += minWaitingTime;
 		totalFuelOnPlanesToLand[insertionQueue] += p->getFuel();
 	} else {
-		totalTimeToDeparture[insertionQueue] += 2;
+		totalTimeToDeparture[insertionQueue] += minWaitingTime;
 	}
 
 	// Adicionamos ele na fila
@@ -211,10 +211,12 @@ void Airport::update() {
 		// A função add que se vira em como adicionar esses aviões na fila
 		// Ela também tem a posibilidade de rejeitar um avião (mandá-lo embora)
 		for (int i = 0; i < cur_k; i++) { this->addPlane(createRandomPlane()); }
+		showWaitingPlanes();
 		// Mandamos remover aviões de todas as filas
 		// A função remove que se vira com se é possível ou não remover o avião
 		// do começo da fila i (devido o tempo de espera das pistas)
 		for (int i = 0; i < 3; i++) { this->removePlane(i); }
+		showWaitingPlanes();
 	} catch (MyException e) {
 		e.what();
 		exit(-1);
@@ -286,10 +288,14 @@ void Airport::showAllExpectedTimes() {
 		std::cout << "Fila da pista " << i + 1 << ":\n";
 		queue[i].iterate([](Plane *p) {
 			std::cout << p->getName() << " esperará por "
-			          << p->getAvgTimeToLeaveQueue() << std::endl;
+			          << p->getAvgTimeToLeaveQueue();
+			std::cout << " para " << (p->isFlying() ? "pousar." : "decolar.")
+			          << std::endl;
 		});
 		std::cout << std::endl;
 	}
+	std::cin.ignore();
+	getchar();
 }
 
 void Airport::showAvgTimeToDeparture() {
@@ -301,7 +307,7 @@ void Airport::showAvgTimeToDeparture() {
 	std::cout << "Tempo médio para decolagem:\n" << std::endl;
 
 	for (int i = 0; i < 3; i++) {
-		std::cout << "Fila " << i + 1 << ": ";
+		std::cout << "Fila " << i + 1 << " (com " << queue[i].size() << " aviões): ";
 
 		totalTime += ((double)totalTimeToDeparture[i]);
 		totalPlanes = queue[i].size();
@@ -315,6 +321,8 @@ void Airport::showAvgTimeToDeparture() {
 
 	std::cout << "Total: " << (totalPlanes == 0 ? 0 : (totalTime / totalPlanes))
 	          << std::endl;
+	std::cin.ignore();
+	getchar();
 }
 
 void Airport::showAvgTimeToLand() {
@@ -326,7 +334,7 @@ void Airport::showAvgTimeToLand() {
 	std::cout << "Tempo médio para pouso:\n" << std::endl;
 
 	for (int i = 0; i < 3; i++) {
-		std::cout << "Fila " << i + 1 << ": ";
+		std::cout << "Fila " << i + 1 << " (com " << queue[i].size() << " aviões): ";
 
 		totalTime += ((double)totalTimeToLand[i]);
 		totalPlanes = queue[i].size();
@@ -340,6 +348,8 @@ void Airport::showAvgTimeToLand() {
 
 	std::cout << "Total: " << (totalPlanes == 0 ? 0 : (totalTime / totalPlanes))
 	          << std::endl;
+	std::cin.ignore();
+	getchar();
 }
 
 void Airport::showAvgFuelOnPlanesWaitingToLand() {
@@ -348,10 +358,11 @@ void Airport::showAvgFuelOnPlanesWaitingToLand() {
 
 	system("clear");
 
-	std::cout << "Média de combustível nos aviões esperando:\n" << std::endl;
+	std::cout << "Média de combustível nos aviões esperando para pousar:\n"
+	          << std::endl;
 
 	for (int i = 0; i < 3; i++) {
-		std::cout << "Fila " << i + 1 << ": ";
+		std::cout << "Fila " << i + 1 << " (com " << queue[i].size() << " aviões): ";
 
 		totalFuel += ((double)totalFuelOnPlanesToLand[i]);
 		totalPlanes = queue[i].size();
@@ -365,6 +376,8 @@ void Airport::showAvgFuelOnPlanesWaitingToLand() {
 
 	std::cout << "Total: " << (totalPlanes == 0 ? 0 : (totalFuel / totalPlanes))
 	          << std::endl;
+	std::cin.ignore();
+	getchar();
 }
 
 void Airport::showAvgFuelOnPlanesThatLanded() {
@@ -375,12 +388,25 @@ void Airport::showAvgFuelOnPlanesThatLanded() {
 	                  0 :
 	                  ((double)totalFuelOnPlanesThatLanded) / totalLendedPlanes)
 	          << std::endl;
+	std::cin.ignore();
+	getchar();
 }
 
 void Airport::showQntOfVeryImportantPlanes() {
 	system("clear");
+	int totalVIPs;
+	totalVIPs = 0;
 
-	std::cout << "Quantidade de emergências nas filas: " << totalVIP << std::endl;
+	std::cout << "Quantidade de emergências nas filas:\n" << std::endl;
+	for (int i = 0; i < 3; i++) {
+		std::cout << "Fila " << i + 1 << ": ";
+		std::cout << totalVIP[i] << std::endl;
+		totalVIPs += totalVIP[i];
+	}
+
+	std::cout << "Total: " << totalVIPs << std::endl;
+	std::cin.ignore();
+	getchar();
 }
 
 bool Airport::simulating() { return cur_time < tot_time; }
