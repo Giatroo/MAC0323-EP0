@@ -123,3 +123,40 @@ Plane *createRandomPlane() {
 
 	return new Plane(*comp, VIP, flying, fuel);
 }
+
+Plane *createUserPlane() {
+	string dest, comp;
+	int number, fuel, travelTime;
+	bool VIP, flying;
+	char c;
+	string name;
+
+	system("clear");
+	cout << "Criando avião para adicionar ao aeroporto:\n";
+
+	cout << "Digite o nome do avião (AA000): ";
+	cin >> name;
+	comp = name.substr(0, 2);
+	number = stoi(name.substr(2, 3));
+	cout << "Pouso ou decolagem (P/D)? ";
+	cin >> c;
+	flying = (c == 'p' || c == 'P');
+	if (flying) {
+		cout << "Quanto de combustível o avião tem no momento? ";
+		cin >> fuel;
+		dest = "GRU";
+		travelTime = INT32_MAX;
+	} else {
+		cout << "Qual o tempo de vôo estimado? ";
+		cin >> travelTime;
+		cout << "Qual o destino (3 Letras): ";
+		cin >> dest;
+		fuel = INT32_MAX;
+	}
+	cout << "É uma emergência (S/N)? ";
+	cin >> c;
+	VIP = (c == 'S' || c == 's');
+
+	name += dest;
+	return new Plane(name, travelTime, VIP, flying, fuel);
+}

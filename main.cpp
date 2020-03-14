@@ -55,19 +55,28 @@ int readInput(bool simulationOver) {
 
 int main() {
 	int k, t;
+	bool random;
+	char c;
 	init();
 
+	// Pegando os inputs
+	system("clear");
 	cout << "Bem-vindo ao simulador de torre de aeroporto:\n";
 	cout << "Por favor, digite o máximo de aviões por tempo: ";
 	cin >> k;
 	cout << "Por favor, digite por quanto tempo você quer que a simulação dure: ";
 	cin >> t;
 
-	Airport airport(t, k); // O aeroporto
-	auto it = airport.queue[0].getFrontIterator();
-	std::cout << it.curNode << std::endl
-	          << (*it).prevNode << std::endl
-	          << (*it).nextNode << std::endl;
+	c = '1';
+	while (c != 'S' && c != 'N' && c != 's' && c != 'n') {
+		cout << "Você gostaria de fazer uma simulação aleatória (S/N)? ";
+		cin >> c;
+		if (c != 'S' && c != 'N' && c != 's' && c != 'n')
+			cout << "Input inválido" << endl;
+	}
+	random = (c == 's' || c == 'S');
+
+	Airport airport(t, k, random); // O aeroporto
 
 	int userOption = readInput(false);
 	while (airport.simulating() && userOption != 0) {
@@ -87,7 +96,6 @@ int main() {
 			case 8: airport.update(); break;
 			default: break;
 		}
-
 		userOption = readInput(false);
 	}
 
@@ -108,8 +116,6 @@ int main() {
 			case 7: airport.showQntOfVeryImportantPlanes(); break;
 			default: break;
 		}
-		it = airport.queue[0].getBackIterator();
-
 		userOption = readInput(true);
 	}
 

@@ -81,4 +81,6 @@ class Plane {
 // Função que cria um avião randômico e retorna seu endereço
 Plane *createRandomPlane();
 
+// Função que retorna o endereço de um avião criado pelo usuário
+Plane *createUserPlane();
 #endif

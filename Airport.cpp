@@ -3,10 +3,11 @@
 #include "Airport.h"
 #include "Plane.h"
 
-Airport::Airport(int t_tot_time, int t_k)
+Airport::Airport(int t_tot_time, int t_k, bool t_randomSimulation)
     : cur_time(0),
       tot_time(t_tot_time),
       k(t_k),
+      randomSimulation(t_randomSimulation),
       totalFuelOnPlanesThatLanded(0),
       totalLendedPlanes(0) {
 	for (int i = 0; i < 3; i++) {
@@ -37,8 +38,8 @@ void Airport::addNonVIP(Plane *p) {
 
 	for (int i = 0; i < totQueues; i++) {
 		if (!queue[i].empty()) {
-			if (minWaitingTime > queue[i].getBack()->getAvgTimeToLeaveQueue() + 2) {
-				minWaitingTime = queue[i].getBack()->getAvgTimeToLeaveQueue() + 2;
+			if (minWaitingTime > queue[i].getBack()->getAvgTimeToLeaveQueue() + 3) {
+				minWaitingTime = queue[i].getBack()->getAvgTimeToLeaveQueue() + 3;
 				// +2 por causa do tempo de serviço
 				insertQueue = i;
 			}
@@ -87,13 +88,13 @@ void Airport::addVIP(Plane *p) {
 				minTroubleTime =
 				    (queue[i].empty()) ?
 				        0 :
-				        queue[i].getBack()->getAvgTimeToLeaveQueue() + 2;
+				        queue[i].getBack()->getAvgTimeToLeaveQueue() + 3;
 			} else if (minWaitingTime == timeToBeFree[i]) {
 				// Se o menor tempo até agr é igual ao da fila ficar livre (empate)
 				int thisTroubleTime =
 				    (queue[i].empty()) ?
 				        0 :
-				        queue[i].getBack()->getAvgTimeToLeaveQueue() + 2;
+				        queue[i].getBack()->getAvgTimeToLeaveQueue() + 3;
 				// Desempatamos pelo menor tempo do último avião da fila
 				if (thisTroubleTime <= minTroubleTime) {
 					insertionQueue = i;
@@ -102,21 +103,21 @@ void Airport::addVIP(Plane *p) {
 			}
 
 		} else { // Se a fila já possui algo VIP
-			// Se o menor tempo é maior que o do último avião (mais 2)
+			// Se o menor tempo é maior que o do último avião (mais 3)
 			if (minWaitingTime >
-			    (*lastVIP[i]).getElement()->getAvgTimeToLeaveQueue() + 2) {
+			    (*lastVIP[i]).getElement()->getAvgTimeToLeaveQueue() + 3) {
 				minWaitingTime =
-				    (*lastVIP[i]).getElement()->getAvgTimeToLeaveQueue() + 2;
+				    (*lastVIP[i]).getElement()->getAvgTimeToLeaveQueue() + 3;
 				insertionQueue = i;
 
 				// Não precisamos ver se a fila está vazia, pois sabemos que há pelo
 				// menos um VIP nela
-				minTroubleTime = queue[i].getBack()->getAvgTimeToLeaveQueue() + 2;
+				minTroubleTime = queue[i].getBack()->getAvgTimeToLeaveQueue() + 3;
 			} else if (minWaitingTime ==
-			           (*lastVIP[i]).getElement()->getAvgTimeToLeaveQueue() + 2) {
+			           (*lastVIP[i]).getElement()->getAvgTimeToLeaveQueue() + 3) {
 				// Se rolou empate
 				int thisTroubleTime =
-				    queue[i].getBack()->getAvgTimeToLeaveQueue() + 2;
+				    queue[i].getBack()->getAvgTimeToLeaveQueue() + 3;
 				// Desempatamos pelo menor tempo do último avião da fila
 				if (thisTroubleTime <= minTroubleTime) {
 					insertionQueue = i;
@@ -159,7 +160,7 @@ void Airport::addVIP(Plane *p) {
 		    .getElement()
 		    ->setAvgTimeToLeaveQueue(
 		        (*insertionPoint).nextNode->getElement()->getAvgTimeToLeaveQueue() +
-		        2);
+		        3);
 
 		insertionPoint--;
 	}
@@ -176,7 +177,8 @@ void Airport::removePlane(int t_index) {
 	// Se o código chega aqui, a pista está livre e tem gente na fila
 
 	// A pista ficará duas unidades de tempo fora de serviço
-	timeToBeFree[t_index] = 2;
+	// (a função update faz -- ainda neste instante de tempo)
+	timeToBeFree[t_index] = 3;
 
 	Plane *p = queue[t_index].getFront();
 
@@ -207,11 +209,22 @@ void Airport::update() {
 
 	int cur_k = rand() % (this->k + 1); // Como é até k, fazemos (mod k+1)
 
+	if (!randomSimulation) {
+		std::cout << "Digite a quantidade de aviões para entrar nesse instante: ";
+		std::cin >> cur_k;
+		if (cur_k < 0) cur_k = 0;
+		if (cur_k > this->k) cur_k = k;
+	}
+
 	try {
 		// A função add que se vira em como adicionar esses aviões na fila
 		// Ela também tem a posibilidade de rejeitar um avião (mandá-lo embora)
-		for (int i = 0; i < cur_k; i++) { this->addPlane(createRandomPlane()); }
-		showWaitingPlanes();
+		for (int i = 0; i < cur_k; i++) {
+			this->addPlane(
+			    (randomSimulation ? createRandomPlane() : createUserPlane()));
+			if (!randomSimulation) showWaitingPlanes();
+		}
+		if (randomSimulation) showWaitingPlanes();
 		// Mandamos remover aviões de todas as filas
 		// A função remove que se vira com se é possível ou não remover o avião
 		// do começo da fila i (devido o tempo de espera das pistas)

@@ -21,8 +21,8 @@
  */
 class Airport {
   private:
-	// Pointer_Queue<Plane *> queue[3]; // As filas para cada pista
-	int timeToBeFree[3]; // Tempo até que a i-ésima pista fique livre
+	Pointer_Queue<Plane *> queue[3]; // As filas para cada pista
+	int timeToBeFree[3];             // Tempo até que a i-ésima pista fique livre
 
 	// Iterador que aponta para o último VIP em cada fila
 	// Se não há VIPs, aponta para o começo da fila (front)
@@ -37,17 +37,17 @@ class Airport {
 	int totalFuelOnPlanesThatLanded; // Soma dos combustíveis nos aviões que pousaram
 	int totalLendedPlanes;           // Total de aviões pousados
 
-	int cur_time; // Tempo atual da simulação
-	int tot_time; // Total de tempo da simulação
-	int k;        // Máximo de aviões que podem
-	              // aparecer por unidade de tempo
+	bool randomSimulation; // Variável para se a simulação vai ser randômica
+	int cur_time;          // Tempo atual da simulação
+	int tot_time;          // Total de tempo da simulação
+	int k;                 // Máximo de aviões que podem
+	                       // aparecer por unidade de tempo
 
 	void addNonVIP(Plane *p); // Adiciona um avião que não é VIP
 	void addVIP(Plane *p);    // Adiciona um avião que é VIP
 
   public:
-	Pointer_Queue<Plane *> queue[3]; // As filas para cada pista
-	Airport(int t_tot_time, int t_k);
+	Airport(int t_tot_time, int t_k, bool t_randomSimulation);
 	void addPlane(Plane *p);       // Adiciona um avião na fila
 	void removePlane(int t_index); // Remove um avião da fila t_index
 	                               // se a pista t_index está disponível
