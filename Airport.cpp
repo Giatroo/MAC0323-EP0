@@ -50,9 +50,11 @@ void Airport::addNonVIP(Plane *p) {
 	}
 
 	if (p->isFlying() && minWaitingTime > p->getFuel()) {
-		// Se o avião ficará se combustível durante a espera, precisamos
-		// mandar ele embora
-		delete p; // Por enquanto, mandar embora é só deletá-lo da memória
+		// Se o avião ficará se combustível durante a espera, nós tornamos eles em
+		// VIP
+		// e tentamos adicioná-lo como VIP
+		p->setVIP();
+		addVIP(p);
 		return;
 	}
 
@@ -281,7 +283,7 @@ void Airport::showWaitingPlanes() {
 	if (!file.is_open())
 		throw MyException(ErrorTypes[FILE_NOT_FOUND], "Airport::showWaitingPlanes");
 
-	file << "Cur_Time: " << cur_time << std::endl;
+	file << "Instante: " << cur_time << std::endl;
 	for (int i = 0; i < 3; i++) {
 		file << "Fila da pista " << i + 1 << ":\n";
 		file << "Tempo de espera: " << timeToBeFree[i] << std::endl;

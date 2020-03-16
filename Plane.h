@@ -65,6 +65,9 @@ class Plane {
 	// Retorna se o avião é muito importante ou não
 	bool isVIP();
 
+	// Método que transforma o avião em VIP
+	void setVIP();
+
 	// Overload no operador < para determinar se um avião tem mais ou menos
 	// prioridade que outro
 	// Ao fazer p1 < p2, retorna true se p1.priority < p2.priority e false caso

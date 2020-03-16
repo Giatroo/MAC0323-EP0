@@ -82,6 +82,8 @@ void Plane::setAvgTimeToLeaveQueue(int t_time) {
 
 bool Plane::isVIP() { return VIP; }
 
+void Plane::setVIP() { this->VIP = true; }
+
 bool Plane::operator<(Plane &p) {
 	return (this->VIP ^ p.VIP) ? p.VIP : this->timeWaiting < p.timeWaiting;
 }

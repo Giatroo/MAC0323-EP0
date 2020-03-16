@@ -95,3 +95,813 @@ Já o método `update` é o método que vai gerenciar tudo o que deve ser feito 
  * E, por fim, vendo se algum avião virou emergência e tomar a ação adequada.
 
 ## Sobre os testes solicitados pelos monitores
+
+### Exemplo 1
+
+#### Instante 0
+
+##### Adicionando:
+
+* O avião LA329 é adicionado na fila 2;
+* O avião LA563 é adicionado na fila 1;
+* O avião LA923 é adicionado na fila 1;
+* O avião LA734 é adicionado na fila 2;
+
+##### Removendo:
+
+* O avião LA329 pousa na pista 2;
+* O avião LA563 pousa na pista 1;
+
+
+#### Instante 1
+
+##### Filas:
+
+```Instante: 1
+Fila da pista 1:
+Tempo de espera: 2
+Avião LA923GRU: 
+        Esperando por 1 unidades de tempo
+        Tempo estimado para sair da fila 2 unidades de tempo
+        Combustível - 3
+ 
+Fila da pista 2:
+Tempo de espera: 2
+Avião LA734GRU: 
+        Esperando por 1 unidades de tempo
+        Tempo estimado para sair da fila 2 unidades de tempo
+        Combustível - 3
+ 
+Fila da pista 3:
+Tempo de espera: 0
+```
+##### Adicionando:
+
+Nenhum avião é adicionado.
+
+##### Removendo:
+
+Nenhum avião é removido.
+
+
+#### Instante 2
+
+##### Filas:
+
+```
+Instante: 2
+Fila da pista 1:
+Tempo de espera: 1
+Avião LA923GRU: 
+        Esperando por 2 unidades de tempo
+        Tempo estimado para sair da fila 1 unidades de tempo
+        Combustível - 2
+ 
+Fila da pista 2:
+Tempo de espera: 1
+Avião LA734GRU: 
+        Esperando por 2 unidades de tempo
+        Tempo estimado para sair da fila 1 unidades de tempo
+        Combustível - 2
+ 
+Fila da pista 3:
+Tempo de espera: 0
+```
+##### Adicionando:
+
+Nenhum avião é adicionado.
+
+##### Removendo:
+
+Nenhum avião é removido.
+
+
+#### Instante 3
+
+##### Filas:
+
+```
+Instante: 3
+Fila da pista 1:
+Tempo de espera: 0
+Avião LA923GRU: 
+        Esperando por 3 unidades de tempo
+        Tempo estimado para sair da fila 0 unidades de tempo
+        Combustível - 1
+ 
+Fila da pista 2:
+Tempo de espera: 0
+Avião LA734GRU: 
+        Esperando por 3 unidades de tempo
+        Tempo estimado para sair da fila 0 unidades de tempo
+        Combustível - 1
+ 
+Fila da pista 3:
+Tempo de espera: 0
+```
+
+##### Adicionando:
+
+Nenhum avião é adicionado.
+
+##### Removendo:
+
+* O avião LA923 pousa na pista 1;
+* O avião LA734 pousa na pista 2;
+
+
+### Exemplo 2:
+
+#### Instante 0:
+
+##### Adicionando:
+
+* O avião LA329 é adicioando na fila 2;
+* O avião LA563 é adicionado na fila 1;
+* O avião LA923 é adicionado (como emergência) na fila 3;
+* O avião LA734 é adicionado (como emergência) na fila 2 (na frente de LA563);
+
+##### Removendo:
+
+* O avião LA563 pousa na fila 1;
+* O avião LA734 pousa na fila 2 (emergência);
+* O avião LA923 pousa na fila 3 (emergência);
+
+
+#### Instante 1:
+
+##### Filas:
+
+```
+Instante: 1
+Fila da pista 1:
+Tempo de espera: 2
+
+Fila da pista 2:
+Tempo de espera: 2
+
+Fila da pista 3:
+Tempo de espera: 2
+```
+
+(Note que o avião LA563 é desviado para aeroporto vizinho)
+
+##### Adicionando:
+
+Nenhum avião é adicionado.
+
+##### Removendo:
+
+Nenhum avião é removido.
+
+
+### Exemplo 3
+
+#### Instante 0:
+
+##### Adicionando:
+
+* O avião LA329 é adicionado na fila 3;
+* O avião LA563 é adicionado na fila 2;
+* O avião LA923 é adicionado na fila 1;
+* O avião LA734 é adicionado na fila 1;
+* O avião LA140 é adicionado na fila 2;
+* O avião JB666 é adicionado na fila 3 (na frente de LA329);
+* O avião LA832 é adicionado na fila 2 (na frente de LA563 e LA140)
+
+##### Removendo:
+
+* O avião LA923 decola na pista 1;
+* O avião LA832 pouca emergencialmente na pista 2;
+* O avião JB666 decola emergencialmente na pista 3;
+
+#### Instante 1:
+
+##### Fila:
+
+```
+Instante: 1
+Fila da pista 1:
+Tempo de espera: 2
+Avião LA734AQP: 
+        Esperando por 1 unidades de tempo
+        Tempo estimado para sair da fila 2 unidades de tempo
+        Tempo de voo estimado - 40
+ 
+Fila da pista 2:
+Tempo de espera: 2
+Avião LA563ADZ: 
+        Esperando por 1 unidades de tempo
+        Tempo estimado para sair da fila 2 unidades de tempo
+        Tempo de voo estimado - 20
+ Avião LA140BOG: 
+        Esperando por 1 unidades de tempo
+        Tempo estimado para sair da fila 5 unidades de tempo
+        Tempo de voo estimado - 60
+ 
+Fila da pista 3:
+Tempo de espera: 2
+Avião LA329ACA: 
+        Esperando por 1 unidades de tempo
+        Tempo estimado para sair da fila 2 unidades de tempo
+        Tempo de voo estimado - 20
+
+```
+
+##### Adicionando:
+
+Nenhum avião é adicionado.
+
+##### Removendo:
+
+Nenhum avião é removido.
+
+#### Instante 2:
+
+##### Fila:
+
+```
+Instante: 2
+Fila da pista 1:
+Tempo de espera: 1
+Avião LA734AQP: 
+        Esperando por 2 unidades de tempo
+        Tempo estimado para sair da fila 1 unidades de tempo
+        Tempo de voo estimado - 40
+ 
+Fila da pista 2:
+Tempo de espera: 1
+Avião LA563ADZ: 
+        Esperando por 2 unidades de tempo
+        Tempo estimado para sair da fila 1 unidades de tempo
+        Tempo de voo estimado - 20
+ Avião LA140BOG: 
+        Esperando por 2 unidades de tempo
+        Tempo estimado para sair da fila 4 unidades de tempo
+        Tempo de voo estimado - 60
+ 
+Fila da pista 3:
+Tempo de espera: 1
+Avião LA329ACA: 
+        Esperando por 2 unidades de tempo
+        Tempo estimado para sair da fila 1 unidades de tempo
+        Tempo de voo estimado - 20
+```
+
+##### Adicionando:
+
+Nenhum avião é adicionado.
+
+##### Removendo:
+
+Nenhum avião é removido.
+
+#### Instante 3:
+
+##### Fila:
+
+```
+Instante: 3
+Fila da pista 1:
+Tempo de espera: 0
+Avião LA329ACA:  VIP
+        Esperando por 3 unidades de tempo
+        Tempo estimado para sair da fila 0 unidades de tempo
+        Tempo de voo estimado - 20
+ Avião LA734AQP: 
+        Esperando por 3 unidades de tempo
+        Tempo estimado para sair da fila 3 unidades de tempo
+        Tempo de voo estimado - 40
+ 
+Fila da pista 2:
+Tempo de espera: 0
+Avião LA140BOG: 
+        Esperando por 3 unidades de tempo
+        Tempo estimado para sair da fila 3 unidades de tempo
+        Tempo de voo estimado - 60
+ 
+Fila da pista 3:
+Tempo de espera: 0
+Avião LA563ADZ:  VIP
+        Esperando por 3 unidades de tempo
+        Tempo estimado para sair da fila 0 unidades de tempo
+        Tempo de voo estimado - 20
+```
+
+Note que LA563 e LA329 se tornaram emergenciais, pois atingiram 10% do tempo de vôo. Devido a isso foram realocados.
+
+##### Adicionando:
+
+Nenhum avião é adicionado.
+
+##### Removendo:
+
+* LA329 decola na pista 1;
+* LA140 decola na pista 2;
+* LA563 decola na pista 3;
+
+#### Instante 4:
+
+##### Fila:
+
+```
+Instante: 4
+Fila da pista 1:
+Tempo de espera: 2
+Avião LA734AQP: 
+        Esperando por 4 unidades de tempo
+        Tempo estimado para sair da fila 2 unidades de tempo
+        Tempo de voo estimado - 40
+ 
+Fila da pista 2:
+Tempo de espera: 2
+
+Fila da pista 3:
+Tempo de espera: 2
+```
+
+##### Adicionando:
+
+Nenhum avião é adicionado.
+
+##### Removendo:
+
+Nenhum avião é removido.
+
+#### Instante 5:
+
+##### Fila:
+
+```
+Instante: 5
+Fila da pista 1:
+Tempo de espera: 1
+
+Fila da pista 2:
+Tempo de espera: 1
+
+Fila da pista 3:
+Tempo de espera: 1
+Avião LA734AQP:  VIP
+        Esperando por 5 unidades de tempo
+        Tempo estimado para sair da fila 1 unidades de tempo
+        Tempo de voo estimado - 40
+```
+
+Note que LA734 acabou sendo realocado, pois se tornou uma emergência.
+
+##### Adicionando:
+
+* O avião LA485 foi adicionado na fila 2;
+* O avião LA300 foi adicionado na fila 1;
+* O avião LA887 foi adicionado na fila 1;
+* O avião LA993 foi adicionado na fila 2;
+* O avião LA554 foi adicionado na fila 1;
+* O avião LA111 foi adicionado na fila 3;
+
+##### Removendo:
+
+Nenhum avião é removido.
+
+#### Instante 6:
+
+##### Fila:
+
+```
+Instante: 6
+Fila da pista 1:
+Tempo de espera: 0
+Avião LA300GRU: 
+        Esperando por 1 unidades de tempo
+        Tempo estimado para sair da fila 0 unidades de tempo
+        Combustível - 9
+ Avião LA887GRU: 
+        Esperando por 1 unidades de tempo
+        Tempo estimado para sair da fila 3 unidades de tempo
+        Combustível - 9
+ Avião LA554GRU: 
+        Esperando por 1 unidades de tempo
+        Tempo estimado para sair da fila 6 unidades de tempo
+        Combustível - 9
+ 
+Fila da pista 2:
+Tempo de espera: 0
+Avião LA485GRU: 
+        Esperando por 1 unidades de tempo
+        Tempo estimado para sair da fila 0 unidades de tempo
+        Combustível - 9
+ Avião LA993GRU: 
+        Esperando por 1 unidades de tempo
+        Tempo estimado para sair da fila 3 unidades de tempo
+        Combustível - 9
+ 
+Fila da pista 3:
+Tempo de espera: 0
+Avião LA734AQP:  VIP
+        Esperando por 6 unidades de tempo
+        Tempo estimado para sair da fila 0 unidades de tempo
+        Tempo de voo estimado - 40
+ Avião LA111CCM: 
+        Esperando por 1 unidades de tempo
+        Tempo estimado para sair da fila 3 unidades de tempo
+        Tempo de voo estimado - 100
+```
+
+##### Adicionando:
+
+* Nenhum avião adicionado;
+
+##### Removendo:
+
+* LA300 pousa na pista 1;
+* LA485 pousa na pista 2;
+* LA734 decola na pista 3;
+
+#### Instante 7:
+
+##### Fila:
+
+```
+Instante: 7
+Fila da pista 1:
+Tempo de espera: 2
+Avião LA887GRU: 
+        Esperando por 2 unidades de tempo
+        Tempo estimado para sair da fila 2 unidades de tempo
+        Combustível - 8
+ Avião LA554GRU: 
+        Esperando por 2 unidades de tempo
+        Tempo estimado para sair da fila 5 unidades de tempo
+        Combustível - 8
+ 
+Fila da pista 2:
+Tempo de espera: 2
+Avião LA993GRU: 
+        Esperando por 2 unidades de tempo
+        Tempo estimado para sair da fila 2 unidades de tempo
+        Combustível - 8
+ 
+Fila da pista 3:
+Tempo de espera: 2
+Avião LA111CCM: 
+        Esperando por 2 unidades de tempo
+        Tempo estimado para sair da fila 2 unidades de tempo
+        Tempo de voo estimado - 100
+```
+
+##### Adicionando:
+
+* O avião LA344 foi adicionado na fila 2;
+* O avião LA461 foi adicionado na fila 1;
+* O avião LA875 foi adicionado na fila 3;
+
+##### Removendo:
+
+* Nenhum avião removido;
+
+#### Instante 8:
+
+##### Fila:
+
+```
+Instante: 8
+Fila da pista 1:
+Tempo de espera: 1
+Avião LA887GRU: 
+        Esperando por 3 unidades de tempo
+        Tempo estimado para sair da fila 1 unidades de tempo
+        Combustível - 7
+ Avião LA554GRU: 
+        Esperando por 3 unidades de tempo
+        Tempo estimado para sair da fila 4 unidades de tempo
+        Combustível - 7
+ Avião LA461GRU: 
+        Esperando por 1 unidades de tempo
+        Tempo estimado para sair da fila 7 unidades de tempo
+        Combustível - 8
+ 
+Fila da pista 2:
+Tempo de espera: 1
+Avião LA993GRU: 
+        Esperando por 3 unidades de tempo
+        Tempo estimado para sair da fila 1 unidades de tempo
+        Combustível - 7
+ Avião LA344GRU: 
+        Esperando por 1 unidades de tempo
+        Tempo estimado para sair da fila 4 unidades de tempo
+        Combustível - 4
+ 
+Fila da pista 3:
+Tempo de espera: 1
+Avião LA111CCM: 
+        Esperando por 3 unidades de tempo
+        Tempo estimado para sair da fila 1 unidades de tempo
+        Tempo de voo estimado - 100
+ Avião LA875CGB: 
+        Esperando por 1 unidades de tempo
+        Tempo estimado para sair da fila 4 unidades de tempo
+        Tempo de voo estimado - 40
+```
+
+##### Adicionando:
+
+* Nenhum avião adicionado;
+
+##### Removendo:
+
+* Nenhum avião removido;
+
+#### Instante 9:
+
+##### Fila:
+
+```
+Instante: 9
+Fila da pista 1:
+Tempo de espera: 0
+Avião LA887GRU: 
+        Esperando por 4 unidades de tempo
+        Tempo estimado para sair da fila 0 unidades de tempo
+        Combustível - 6
+ Avião LA554GRU: 
+        Esperando por 4 unidades de tempo
+        Tempo estimado para sair da fila 3 unidades de tempo
+        Combustível - 6
+ Avião LA461GRU: 
+        Esperando por 2 unidades de tempo
+        Tempo estimado para sair da fila 6 unidades de tempo
+        Combustível - 7
+ 
+Fila da pista 2:
+Tempo de espera: 0
+Avião LA993GRU: 
+        Esperando por 4 unidades de tempo
+        Tempo estimado para sair da fila 0 unidades de tempo
+        Combustível - 6
+ Avião LA344GRU: 
+        Esperando por 2 unidades de tempo
+        Tempo estimado para sair da fila 3 unidades de tempo
+        Combustível - 3
+ 
+Fila da pista 3:
+Tempo de espera: 0
+Avião LA111CCM: 
+        Esperando por 4 unidades de tempo
+        Tempo estimado para sair da fila 0 unidades de tempo
+        Tempo de voo estimado - 100
+ Avião LA875CGB: 
+        Esperando por 2 unidades de tempo
+        Tempo estimado para sair da fila 3 unidades de tempo
+        Tempo de voo estimado - 40
+```
+
+##### Adicionando:
+
+* Nenhum avião adicionado;
+
+##### Removendo:
+
+* O avião LA887 pousa na pista 1;
+* O avião LA993 pousa na pista 2;
+* O avião LA111 decola na pista 3;
+
+#### Instante 10:
+
+##### Fila:
+
+```
+Instante: 10
+Fila da pista 1:
+Tempo de espera: 2
+Avião LA554GRU: 
+        Esperando por 5 unidades de tempo
+        Tempo estimado para sair da fila 2 unidades de tempo
+        Combustível - 5
+ Avião LA461GRU: 
+        Esperando por 3 unidades de tempo
+        Tempo estimado para sair da fila 5 unidades de tempo
+        Combustível - 6
+ 
+Fila da pista 2:
+Tempo de espera: 2
+Avião LA344GRU: 
+        Esperando por 3 unidades de tempo
+        Tempo estimado para sair da fila 2 unidades de tempo
+        Combustível - 2
+ 
+Fila da pista 3:
+Tempo de espera: 2
+Avião LA875CGB: 
+        Esperando por 3 unidades de tempo
+        Tempo estimado para sair da fila 2 unidades de tempo
+        Tempo de voo estimado - 40
+```
+
+##### Adicionando:
+
+* Nenhum avião adicionado;
+
+##### Removendo:
+
+* Nenhuma avião removido;
+
+
+#### Instante 11:
+
+##### Fila:
+
+```
+Instante: 11
+Fila da pista 1:
+Tempo de espera: 1
+Avião LA554GRU: 
+        Esperando por 6 unidades de tempo
+        Tempo estimado para sair da fila 1 unidades de tempo
+        Combustível - 4
+ Avião LA461GRU: 
+        Esperando por 4 unidades de tempo
+        Tempo estimado para sair da fila 4 unidades de tempo
+        Combustível - 5
+ 
+Fila da pista 2:
+Tempo de espera: 1
+Avião LA344GRU: 
+        Esperando por 4 unidades de tempo
+        Tempo estimado para sair da fila 1 unidades de tempo
+        Combustível - 1
+ 
+Fila da pista 3:
+Tempo de espera: 1
+Avião LA875CGB: 
+        Esperando por 4 unidades de tempo
+        Tempo estimado para sair da fila 1 unidades de tempo
+        Tempo de voo estimado - 40
+```
+
+##### Adicionando:
+
+* Nenhum avião adicionado;
+
+##### Removendo:
+
+* Nenhuma avião removido;
+
+#### Instante 12:
+
+##### Fila:
+
+```
+Instante: 12
+Fila da pista 1:
+Tempo de espera: 0
+Avião LA554GRU: 
+        Esperando por 7 unidades de tempo
+        Tempo estimado para sair da fila 0 unidades de tempo
+        Combustível - 3
+ Avião LA461GRU: 
+        Esperando por 5 unidades de tempo
+        Tempo estimado para sair da fila 3 unidades de tempo
+        Combustível - 4
+ 
+Fila da pista 2:
+Tempo de espera: 0
+Avião LA344GRU: 
+        Esperando por 5 unidades de tempo
+        Tempo estimado para sair da fila 0 unidades de tempo
+        Combustível - 0
+ 
+Fila da pista 3:
+Tempo de espera: 0
+Avião LA875CGB:  VIP
+        Esperando por 5 unidades de tempo
+        Tempo estimado para sair da fila 0 unidades de tempo
+        Tempo de voo estimado - 40
+```
+
+Note que LA875 tornou-se uma emergência e foi realocado (mas calhou de a melhor fila para ele ser a que ele já estava).
+
+##### Adicionando:
+
+* Nenhum avião adicionado;
+
+##### Removendo:
+
+* O avião LA554 pousa na pista 1;
+* O avião LA344 pousa (com 0 de combustível) na pista 2;
+* O avião LA875 decola na pista 3;
+
+#### Instante 13:
+
+##### Fila:
+
+```
+Instante: 13
+Fila da pista 1:
+Tempo de espera: 2
+Avião LA461GRU: 
+        Esperando por 6 unidades de tempo
+        Tempo estimado para sair da fila 2 unidades de tempo
+        Combustível - 3
+ 
+Fila da pista 2:
+Tempo de espera: 2
+
+Fila da pista 3:
+Tempo de espera: 2
+```
+
+##### Adicionando:
+
+* Nenhum avião adicionado;
+
+##### Removendo:
+
+* Nenhum avião removido;
+
+#### Instante 14:
+
+##### Fila:
+
+```
+Instante: 14
+Fila da pista 1:
+Tempo de espera: 1
+Avião LA461GRU: 
+        Esperando por 7 unidades de tempo
+        Tempo estimado para sair da fila 1 unidades de tempo
+        Combustível - 2
+ 
+Fila da pista 2:
+Tempo de espera: 1
+
+Fila da pista 3:
+Tempo de espera: 1
+```
+
+##### Adicionando:
+
+* Nenhum avião adicionado;
+
+##### Removendo:
+
+* Nenhum avião removido;
+
+#### Instante 15:
+
+##### Fila:
+
+```
+Instante: 15
+Fila da pista 1:
+Tempo de espera: 0
+Avião LA461GRU: 
+        Esperando por 8 unidades de tempo
+        Tempo estimado para sair da fila 0 unidades de tempo
+        Combustível - 1
+ 
+Fila da pista 2:
+Tempo de espera: 0
+
+Fila da pista 3:
+Tempo de espera: 0
+```
+
+##### Adicionando:
+
+* O avião LA673 foi adicionado na fila 3;
+* O avião LA899 foi adicionado na fila 2;
+* O avião LA505 foi adicionado na fila 1;
+
+##### Removendo:
+
+* O avião LA673 decolou na pista 3;
+* O avião LA899 decolou na pista 2;
+* O avião LA505 pousou na pista 1;
+
+#### Instante 16:
+
+##### Fila:
+
+```
+Instante: 16
+Fila da pista 1:
+Tempo de espera: 2
+
+Fila da pista 2:
+Tempo de espera: 2
+
+Fila da pista 3:
+Tempo de espera: 2
+```
+
+Note que o avião LA461 foi redirecionado com 1 de combustível para outro aeroporto.
+
+##### Adicionando:
+
+* Nenhum avião adicionado;
+
+##### Removendo:
+
+* Nenhum avião removido;
+
+Daí em diante, nenhum avião chega ou sai do aeroporto.
